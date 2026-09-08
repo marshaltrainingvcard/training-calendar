@@ -70,16 +70,17 @@ function renderCalendar(sessions) {
     const grouped = groupByMonth(filtered);
 
     Object.keys(grouped).forEach(month => {
-        calendar.innerHTML += `<h2>${month}</h2>`;
+        calendar.innerHTML += `<div class="month-header">${month}</div>`;
 
         grouped[month].forEach(s => {
+            const link = s.course_link || "#";
+
             calendar.innerHTML += `
                 <div class="session">
-                    <h3>${s.course_title}</h3>
+                    <a class="session-title" href="${link}" target="_blank">${s.course_title}</a>
                     <p><strong>Date:</strong> ${s.start_date} → ${s.end_date}</p>
                     <p><strong>Location:</strong> ${s.location}</p>
                     <p><strong>Fees:</strong> AED ${s.fees}</p>
-                    <p><strong>Category:</strong> ${s.category}</p>
                 </div>
             `;
         });
@@ -98,4 +99,3 @@ async function init() {
 }
 
 init();
-
