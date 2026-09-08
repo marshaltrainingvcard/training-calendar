@@ -51,6 +51,16 @@ function populateFilters(sessions) {
     categories.forEach(c => categorySelect.innerHTML += `<option value="${c}">${c}</option>`);
 }
 
+function formatDate(startStr, endStr) {
+    const start = new Date(startStr);
+    const end = new Date(endStr);
+
+    const month = start.toLocaleString("default", { month: "short" });
+    const year = start.getFullYear();
+
+    return `${start.getDate()} - ${end.getDate()} ${month} ${year}`;
+}
+
 function renderCalendar(sessions) {
     const calendar = document.getElementById("calendar");
     calendar.innerHTML = "";
@@ -74,14 +84,17 @@ function renderCalendar(sessions) {
 
         grouped[month].forEach(s => {
             const link = s.course_link || "#";
+            const formattedDate = formatDate(s.start_date, s.end_date);
 
             calendar.innerHTML += `
-                <div class="session">
-                    <a class="session-title" href="${link}" target="_blank">${s.course_title}</a>
-                    <p><strong>Date:</strong> ${s.start_date} → ${s.end_date}</p>
-                    <p><strong>Location:</strong> ${s.location}</p>
-                    <p><strong>Fees:</strong> AED ${s.fees}</p>
-                </div>
+                <a href="${link}" target="_blank" style="text-decoration:none; color:inherit;">
+                    <div class="session">
+                        <div class="session-title">${s.course_title}</div>
+                        <p>${formattedDate}</p>
+                        <p>${s.location}</p>
+                        <p>AED ${s.fees}</p>
+                    </div>
+                </a>
             `;
         });
     });
