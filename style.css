@@ -24,8 +24,12 @@ body {
 }
 
 .month-header {
-    font-size: 26px;
+    background: #1e73be;
+    color: white;
+    padding: 12px 20px;
+    font-size: 22px;
     font-weight: bold;
+    border-radius: 6px;
     margin: 40px 0 20px;
 }
 
@@ -35,18 +39,20 @@ body {
     margin-bottom: 15px;
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.session:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 .session-title {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #0077cc;
-    text-decoration: none;
-}
-
-.session-title:hover {
-    text-decoration: underline;
+    color: #000;
 }
 
 .session p {
