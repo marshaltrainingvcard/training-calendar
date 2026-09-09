@@ -59,10 +59,27 @@ function formatDate(startStr, endStr) {
     const start = new Date(startStr);
     const end = new Date(endStr);
 
-    const month = start.toLocaleString("default", { month: "short" });
-    const year = start.getFullYear();
+    const startDay = start.getDate();
+    const endDay = end.getDate();
 
-    return `${start.getDate()} - ${end.getDate()} ${month} ${year}`;
+    const startMonth = start.toLocaleString("default", { month: "short" });
+    const endMonth = end.toLocaleString("default", { month: "short" });
+
+    const startYear = start.getFullYear();
+    const endYear = end.getFullYear();
+
+    // If same month & same year → normal format
+    if (startMonth === endMonth && startYear === endYear) {
+        return `${startDay} - ${endDay} ${startMonth} ${startYear}`;
+    }
+
+    // If different month but same year
+    if (startYear === endYear) {
+        return `${startDay} ${startMonth} - ${endDay} ${endMonth} ${startYear}`;
+    }
+
+    // If different year
+    return `${startDay} ${startMonth} ${startYear} - ${endDay} ${endMonth} ${endYear}`;
 }
 
 function applySearchFilter(sessions) {
