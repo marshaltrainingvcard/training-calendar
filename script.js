@@ -122,6 +122,11 @@ function renderCalendar(sessions) {
 
     const grouped = groupByMonth(paginatedItems);
 
+    // Sort courses inside each month by start date
+    Object.keys(grouped).forEach(month => {
+    grouped[month].sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
+});
+    
     Object.keys(grouped).forEach(month => {
         calendar.innerHTML += `<div class="month-header">${month}</div>`;
 
