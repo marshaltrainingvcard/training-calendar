@@ -17,7 +17,8 @@ body {
     border-bottom: 1px solid #ddd;
 }
 
-#filters select {
+#filters select,
+#filters input {
     padding: 10px;
     font-size: 16px;
 }
@@ -89,20 +90,26 @@ body {
 .pagination {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 10px;
     margin: 40px 0;
+    flex-wrap: wrap;
 }
 
-.pagination button {
-    padding: 10px 20px;
-    background: #f57c00;
-    color: white;
-    border: none;
+.page-btn {
+    padding: 10px 15px;
+    background: #eee;
     border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
+    border: 1px solid #ccc;
 }
 
-.pagination button:hover {
-    background: #d96a00;
+.page-btn:hover {
+    background: #ddd;
+}
+
+.page-btn.active {
+    background: #f57c00;
+    color: white;
+    border-color: #f57c00;
 }
