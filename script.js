@@ -142,7 +142,7 @@ function renderCalendar(sessions) {
                         <div class="session-columns">
                             <div class="col date-col">${formattedDate}</div>
                             <div class="col location-col">${s.location}</div>
-                            <div class="col fees-col">AED ${s.fees}</div>
+                            <div class="col fees-col">${s.currency || "AED"} ${s.fees}</div>
                         </div>
                     </div>
                 </a>
