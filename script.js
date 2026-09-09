@@ -1,5 +1,8 @@
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShZHjeKaVqGU0_iGOCzd3VHSstzPN4EX-nK_vDOswp1ryvkiW_o-DhxIofeXqMzD15jM_0ovhhRXeY/pub?output=csv";
 
+let currentPage = 1;
+const itemsPerPage = 10;
+
 async function loadCSV() {
     const response = await fetch(sheetURL);
     const data = await response.text();
@@ -77,7 +80,15 @@ function renderCalendar(sessions) {
                (!categoryFilter || categoryFilter === s.category);
     });
 
-    const grouped = groupByMonth(filtered);
+    const totalItems = filtered.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
+    const paginatedItems = filtered.slice(startIndex, endIndex);
+
+    const grouped = groupByMonth(paginatedItems);
 
     Object.keys(grouped).forEach(month => {
         calendar.innerHTML += `<div class="month-header">${month}</div>`;
@@ -90,14 +101,45 @@ function renderCalendar(sessions) {
                 <a href="${link}" target="_blank" style="text-decoration:none; color:inherit;">
                     <div class="session">
                         <div class="session-title">${s.course_title}</div>
-                        <p>${formattedDate}</p>
-                        <p>${s.location}</p>
-                        <p>AED ${s.fees}</p>
+
+                        <div class="session-columns">
+                            <div class="col date-col">${formattedDate}</div>
+                            <div class="col location-col">${s.location}</div>
+                            <div class="col fees-col">AED ${s.fees}</div>
+                        </div>
                     </div>
                 </a>
             `;
         });
     });
+
+    let paginationHTML = `<div class="pagination">`;
+
+    if (currentPage > 1) {
+        paginationHTML += `<button id="prevPage">Previous</button>`;
+    }
+
+    if (currentPage < totalPages) {
+        paginationHTML += `<button id="nextPage">Next</button>`;
+    }
+
+    paginationHTML += `</div>`;
+
+    calendar.innerHTML += paginationHTML;
+
+    if (currentPage > 1) {
+        document.getElementById("prevPage").onclick = () => {
+            currentPage--;
+            renderCalendar(sessions);
+        };
+    }
+
+    if (currentPage < totalPages) {
+        document.getElementById("nextPage").onclick = () => {
+            currentPage++;
+            renderCalendar(sessions);
+        };
+    }
 }
 
 async function init() {
@@ -105,7 +147,10 @@ async function init() {
     populateFilters(sessions);
 
     document.querySelectorAll("#filters select").forEach(sel => {
-        sel.addEventListener("change", () => renderCalendar(sessions));
+        sel.addEventListener("change", () => {
+            currentPage = 1;
+            renderCalendar(sessions);
+        });
     });
 
     renderCalendar(sessions);
