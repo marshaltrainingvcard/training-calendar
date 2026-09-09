@@ -2,6 +2,7 @@ const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShZHjeKaVqGU0
 
 let currentPage = 1;
 const itemsPerPage = 10;
+let globalSessions = [];
 
 async function loadCSV() {
     const response = await fetch(sheetURL);
@@ -64,6 +65,18 @@ function formatDate(startStr, endStr) {
     return `${start.getDate()} - ${end.getDate()} ${month} ${year}`;
 }
 
+function applySearchFilter(sessions) {
+    const searchValue = document.getElementById("search").value.toLowerCase();
+
+    if (!searchValue) return sessions;
+
+    return sessions.filter(s =>
+        s.course_title.toLowerCase().includes(searchValue) ||
+        s.location.toLowerCase().includes(searchValue) ||
+        s.category.toLowerCase().includes(searchValue)
+    );
+}
+
 function renderCalendar(sessions) {
     const calendar = document.getElementById("calendar");
     calendar.innerHTML = "";
@@ -72,13 +85,15 @@ function renderCalendar(sessions) {
     const locationFilter = document.getElementById("filter-location").value;
     const categoryFilter = document.getElementById("filter-category").value;
 
-    const filtered = sessions.filter(s => {
+    let filtered = sessions.filter(s => {
         const monthName = new Date(s.start_date).toLocaleString("default", { month: "long", year: "numeric" });
 
         return (!monthFilter || monthFilter === monthName) &&
                (!locationFilter || locationFilter === s.location) &&
                (!categoryFilter || categoryFilter === s.category);
     });
+
+    filtered = applySearchFilter(filtered);
 
     const totalItems = filtered.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -113,47 +128,51 @@ function renderCalendar(sessions) {
         });
     });
 
+    renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+    const calendar = document.getElementById("calendar");
+
     let paginationHTML = `<div class="pagination">`;
 
-    if (currentPage > 1) {
-        paginationHTML += `<button id="prevPage">Previous</button>`;
-    }
-
-    if (currentPage < totalPages) {
-        paginationHTML += `<button id="nextPage">Next</button>`;
+    for (let i = 1; i <= totalPages; i++) {
+        paginationHTML += `
+            <div class="page-btn ${i === currentPage ? "active" : ""}" data-page="${i}">
+                ${i}
+            </div>
+        `;
     }
 
     paginationHTML += `</div>`;
 
     calendar.innerHTML += paginationHTML;
 
-    if (currentPage > 1) {
-        document.getElementById("prevPage").onclick = () => {
-            currentPage--;
-            renderCalendar(sessions);
+    document.querySelectorAll(".page-btn").forEach(btn => {
+        btn.onclick = () => {
+            currentPage = parseInt(btn.dataset.page);
+            renderCalendar(globalSessions);
         };
-    }
-
-    if (currentPage < totalPages) {
-        document.getElementById("nextPage").onclick = () => {
-            currentPage++;
-            renderCalendar(sessions);
-        };
-    }
+    });
 }
 
 async function init() {
-    const sessions = await loadCSV();
-    populateFilters(sessions);
+    globalSessions = await loadCSV();
+    populateFilters(globalSessions);
 
     document.querySelectorAll("#filters select").forEach(sel => {
         sel.addEventListener("change", () => {
             currentPage = 1;
-            renderCalendar(sessions);
+            renderCalendar(globalSessions);
         });
     });
 
-    renderCalendar(sessions);
+    document.getElementById("search").addEventListener("input", () => {
+        currentPage = 1;
+        renderCalendar(globalSessions);
+    });
+
+    renderCalendar(globalSessions);
 }
 
 init();
