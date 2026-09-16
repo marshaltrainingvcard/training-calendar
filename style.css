@@ -236,8 +236,8 @@ body {
     cursor: pointer;
 
     display: block;
-    margin-left: auto;      /* pushes button to the right */
-    margin-top: 25px;       /* spacing from terms text */
+    margin-left: auto;
+    margin-top: 25px;
 }
 
 /* ========================= */
