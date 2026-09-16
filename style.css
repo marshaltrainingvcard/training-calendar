@@ -11,13 +11,7 @@ body {
     margin: 30px auto;
 }
 
-/* Header */
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-/* Top controls */
+/* Filters */
 .top-controls {
     display: flex;
     justify-content: center;
@@ -25,15 +19,7 @@ h1 {
     margin-bottom: 25px;
 }
 
-#searchBar {
-    padding: 10px;
-    width: 250px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-#monthFilter,
-#dateFilter {
+.top-controls select {
     padding: 10px;
     border-radius: 6px;
     border: 1px solid #ccc;
@@ -43,11 +29,13 @@ h1 {
 .month-header {
     background: #f57c00;
     color: white;
-    padding: 10px 15px;
+    padding: 12px 20px;
     margin: 30px auto 10px auto;
-    width: fit-content;
-    border-radius: 6px;
+    width: 80%;
+    max-width: 700px;
+    border-radius: 10px;
     font-size: 20px;
+    text-align: left;
 }
 
 /* Course box */
@@ -67,7 +55,6 @@ h1 {
     transform: scale(1.02);
 }
 
-/* Title */
 .session-title {
     font-size: 18px;
     font-weight: bold;
@@ -80,16 +67,24 @@ h1 {
     grid-template-columns: 1fr 1fr 1fr;
     font-size: 15px;
     align-items: center;
-    column-gap: 20px;
+}
+
+.session-columns .col {
+    padding: 5px 10px;
+}
+
+.session-columns .col-date {
+    text-align: center;
+    font-weight: bold;
+}
+
+.session-columns .col-fees {
+    text-align: right;
+    font-weight: bold;
 }
 
 .session-columns .col:not(:last-child) {
     border-right: 1px solid #ddd;
-    padding-right: 20px;
-}
-
-.col-date {
-    font-weight: bold;
 }
 
 /* Pagination */
@@ -145,10 +140,6 @@ h1 {
     color: #333;
 }
 
-.modal-title a:hover {
-    text-decoration: underline;
-}
-
 .modal-section p {
     margin: 6px 0;
     font-size: 16px;
@@ -167,8 +158,11 @@ h1 {
     border: 1px solid #ccc;
 }
 
-.captcha-box {
+.terms-box {
     margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .register-btn {
