@@ -214,21 +214,10 @@ function openCourseModal(course) {
     course.currency || "AED"
   } ${course.fees}`;
 
-  const registerBtn = document.getElementById("modalRegister");
-  const termsCheck = document.getElementById("termsCheck");
-
   document.getElementById("registrationForm").reset();
-  registerBtn.classList.remove("enabled");
-  termsCheck.checked = false;
-
-  termsCheck.onchange = () => {
-    if (termsCheck.checked) registerBtn.classList.add("enabled");
-    else registerBtn.classList.remove("enabled");
-  };
 
   document.getElementById("registrationForm").onsubmit = async (e) => {
     e.preventDefault();
-    if (!termsCheck.checked) return;
 
     const payload = {
       course: course.course_title,
@@ -249,12 +238,12 @@ function openCourseModal(course) {
 
     const result = await response.json();
 
-    if (result.status === "success") {
-      alert("Your registration has been submitted successfully.");
-      modal.style.display = "none";
-    } else {
-      alert("There was an error submitting your registration.");
-    }
+    modal.style.display = "none";
+    document.getElementById("successOverlay").style.display = "block";
+
+    setTimeout(() => {
+      document.getElementById("successOverlay").style.display = "none";
+    }, 2000);
   };
 
   modal.style.display = "block";
