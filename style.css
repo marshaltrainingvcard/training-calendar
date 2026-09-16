@@ -192,17 +192,16 @@ body {
 /* TERMS — checkbox above text, aligned left */
 .terms-box {
     margin-top: 15px;
-    display: flex;
-    flex-direction: column;      /* stack vertically */
-    align-items: flex-start;     /* align left */
-    gap: 4px;
+    display: block;              /* simple block container */
 }
 
 .terms-box input[type="checkbox"] {
-    margin: 0;
+    display: block;              /* own line */
+    margin: 0 0 4px 0;           /* small gap below, aligned left */
 }
 
 .terms-box label {
+    display: inline-block;       /* text on its own line, left aligned */
     font-size: 13px;
 }
 
@@ -210,6 +209,7 @@ body {
     color: #f57c00;
     text-decoration: none;
 }
+
 .terms-box a:hover {
     text-decoration: underline;
 }
