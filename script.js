@@ -82,11 +82,13 @@ function populateFilters() {
   });
 }
 
+document.getElementById("searchBar").addEventListener("input", applyFilters);
 document.getElementById("monthFilter").addEventListener("change", applyFilters);
 document.getElementById("locationFilter").addEventListener("change", applyFilters);
 document.getElementById("categoryFilter").addEventListener("change", applyFilters);
 
 function applyFilters() {
+  const search = document.getElementById("searchBar").value.toLowerCase();
   const month = document.getElementById("monthFilter").value;
   const location = document.getElementById("locationFilter").value;
   const category = document.getElementById("categoryFilter").value;
@@ -97,11 +99,12 @@ function applyFilters() {
       month: "long",
     })} ${d.getFullYear()}`;
 
+    const matchesSearch = c.course_title.toLowerCase().includes(search);
     const matchesMonth = month ? courseMonth === month : true;
     const matchesLocation = location ? c.location === location : true;
     const matchesCategory = category ? c.category === category : true;
 
-    return matchesMonth && matchesLocation && matchesCategory;
+    return matchesSearch && matchesMonth && matchesLocation && matchesCategory;
   });
 
   currentPage = 1;
