@@ -119,7 +119,7 @@ body {
 }
 
 /* ========================= */
-/* MODAL (SAFE + ISOLATED)   */
+/* MODAL (FINAL FIX)         */
 /* ========================= */
 
 .modal {
@@ -136,47 +136,44 @@ body {
 .modal-content {
     background: #fff;
     margin: 5% auto;
-    padding: 25px 30px;
+    padding: 25px 40px;          /* equal left/right spacing */
     border-radius: 12px;
-    width: 95%;              /* WIDER POP-UP */
-    max-width: 650px;        /* EXTENDED HORIZONTAL SIZE */
+    width: 95%;
+    max-width: 700px;            /* wider popup */
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
-.close-btn {
-    float: right;
-    font-size: 28px;
-    cursor: pointer;
-}
-
+/* Title */
 .modal-title a {
     text-decoration: none;
     color: #333;
 }
-
 .modal-title a:hover {
     color: #f57c00;
 }
 
+/* Course details */
 .modal-section p {
     margin: 6px 0;
     font-size: 15px;
 }
 
-/* FORM — MATCH WIDTH OF COURSE DETAILS */
+/* FORM — aligned with course details */
 .modal-form {
     width: 100%;
     margin-top: 10px;
 }
 
+/* LABELS */
 .modal-form label {
     margin-top: 12px;
     font-weight: bold;
     font-size: 14px;
 }
 
+/* INPUTS — FIXED WIDTH, NOT TOO LONG */
 .modal-form input {
-    width: 100%;             /* FULL WIDTH */
+    width: 90%;                 /* shorter than full width */
     padding: 10px;
     margin-top: 5px;
     border-radius: 6px;
@@ -184,12 +181,12 @@ body {
     font-size: 14px;
 }
 
-/* TERMS — STACKED VERTICALLY */
+/* TERMS — checkbox above text, aligned left */
 .terms-box {
     margin-top: 15px;
     display: flex;
-    flex-direction: column;  /* STACKED */
-    align-items: flex-start; /* LEFT ALIGN */
+    flex-direction: column;     /* stack vertically */
+    align-items: flex-start;    /* align left */
     gap: 4px;
 }
 
@@ -205,15 +202,13 @@ body {
     color: #f57c00;
     text-decoration: none;
 }
-
 .terms-box a:hover {
     text-decoration: underline;
 }
 
-/* REGISTER BUTTON — SMALL + RIGHT ALIGNED */
+/* REGISTER BUTTON — small + right aligned */
 .register-btn {
-    width: 33%;              /* ONE-THIRD SIZE */
-    float: right;            /* ALIGN RIGHT */
+    width: 30%;                 /* 1/3 size */
     margin-top: 20px;
     padding: 10px;
     background: #f57c00;
@@ -222,6 +217,7 @@ body {
     border-radius: 6px;
     font-size: 15px;
     cursor: pointer;
+    float: right;               /* align right */
     opacity: 0.5;
     pointer-events: none;
 }
