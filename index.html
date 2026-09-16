@@ -2,29 +2,79 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Training Calendar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marshal Training Calendar</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="filters">
-    <input type="text" id="search" placeholder="Search courses..." />
-    
-    <select id="filter-month">
-        <option value="">All Months</option>
-    </select>
+    <div class="filters">
+        <select id="categoryFilter">
+            <option value="">All Categories</option>
+        </select>
 
-    <select id="filter-location">
-        <option value="">All Locations</option>
-    </select>
+        <select id="locationFilter">
+            <option value="">All Locations</option>
+        </select>
+    </div>
 
-    <select id="filter-category">
-        <option value="">All Categories</option>
-    </select>
-</div>
+    <div id="calendar"></div>
 
-<div id="calendar"></div>
+    <div id="pagination"></div>
 
-<script src="script.js"></script>
+    <!-- Modal -->
+    <div id="courseModal" class="modal">
+        <div class="modal-content">
+
+            <span id="closeModal" class="close-btn">&times;</span>
+
+            <h2>
+                <a id="modalTitleLink" href="#" target="_blank" style="text-decoration:none; color:#000;">
+                    <span id="modalTitle"></span>
+                </a>
+            </h2>
+
+            <div class="modal-details">
+                <p><strong>Date:</strong> <span id="modalDate"></span></p>
+                <p><strong>Location:</strong> <span id="modalLocation"></span></p>
+                <p><strong>Fees:</strong> <span id="modalFees"></span></p>
+            </div>
+
+            <hr>
+
+            <form id="registrationForm">
+
+                <label>Full Name*</label>
+                <input type="text" id="regName" required>
+
+                <label>Email*</label>
+                <input type="email" id="regEmail" required>
+
+                <label>Company Name</label>
+                <input type="text" id="regCompany">
+
+                <label>Designation / Position</label>
+                <input type="text" id="regPosition">
+
+                <label>Telephone No*</label>
+                <input type="text" id="regPhone" required>
+
+                <div class="captcha-box">
+                    <label>
+                        <input type="checkbox" id="captchaCheck">
+                        I am not a robot
+                    </label>
+                </div>
+
+                <button type="submit" id="modalRegister" class="register-btn disabled">
+                    Register Now
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
