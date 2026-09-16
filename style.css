@@ -192,29 +192,23 @@ body {
 /* TERMS — checkbox above text, aligned left */
 .terms-box {
     margin-top: 15px;
-    width: 100%;                 /* anchor to full form width */
-    padding-left: 0;             /* ensure left alignment */
+    width: 100%;
+    text-align: left !important;     /* override any inherited centering */
 }
 
 .terms-box input[type="checkbox"] {
-    display: block;              /* forces checkbox to left edge */
-    margin: 0 0 6px 0;           /* small gap below */
-    transform: translateX(0);    /* prevents centering from parent */
+    display: inline-block;           /* prevents auto-centering */
+    margin-left: 0 !important;       /* force left edge */
+    transform: none !important;      /* remove any previous transforms */
+    position: relative;              /* anchor it */
+    left: 0 !important;              /* override any centering */
 }
 
 .terms-box label {
-    display: block;              /* text on its own line */
+    display: block;
+    margin-top: 4px;
     font-size: 13px;
-    text-align: left;            /* ensure left alignment */
-}
-
-.terms-box a {
-    color: #f57c00;
-    text-decoration: none;
-}
-
-.terms-box a:hover {
-    text-decoration: underline;
+    text-align: left !important;     /* ensure text stays left */
 }
 
 /* REGISTER BUTTON — small + right aligned + NOT spilling */
