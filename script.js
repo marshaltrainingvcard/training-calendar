@@ -19,7 +19,7 @@ window.onclick = (e) => {
   if (e.target === modal) modal.style.display = "none";
 };
 
-// Load and parse CSV
+// Load CSV
 async function loadCourses() {
   const res = await fetch(sheetURL);
   const text = await res.text();
@@ -42,17 +42,22 @@ async function loadCourses() {
 
 function populateFilters() {
   const monthFilter = document.getElementById("monthFilter");
-  const dateFilter = document.getElementById("dateFilter");
+  const locationFilter = document.getElementById("locationFilter");
+  const categoryFilter = document.getElementById("categoryFilter");
 
   const months = new Set();
-  const years = new Set();
+  const locations = new Set();
+  const categories = new Set();
 
   allCourses.forEach((c) => {
     const d = new Date(c.start_date);
     if (!isNaN(d)) {
-      months.add(d.toLocaleString("default", { month: "long" }));
-      years.add(d.getFullYear());
+      months.add(
+        `${d.toLocaleString("default", { month: "long" })} ${d.getFullYear()}`
+      );
     }
+    if (c.location) locations.add(c.location);
+    if (c.category) categories.add(c.category);
   });
 
   months.forEach((m) => {
@@ -62,31 +67,41 @@ function populateFilters() {
     monthFilter.appendChild(opt);
   });
 
-  years.forEach((y) => {
+  locations.forEach((l) => {
     const opt = document.createElement("option");
-    opt.value = y;
-    opt.textContent = y;
-    dateFilter.appendChild(opt);
+    opt.value = l;
+    opt.textContent = l;
+    locationFilter.appendChild(opt);
+  });
+
+  categories.forEach((c) => {
+    const opt = document.createElement("option");
+    opt.value = c;
+    opt.textContent = c;
+    categoryFilter.appendChild(opt);
   });
 }
 
-document.getElementById("searchBar").addEventListener("input", applyFilters);
 document.getElementById("monthFilter").addEventListener("change", applyFilters);
-document.getElementById("dateFilter").addEventListener("change", applyFilters);
+document.getElementById("locationFilter").addEventListener("change", applyFilters);
+document.getElementById("categoryFilter").addEventListener("change", applyFilters);
 
 function applyFilters() {
-  const search = document.getElementById("searchBar").value.toLowerCase();
   const month = document.getElementById("monthFilter").value;
-  const year = document.getElementById("dateFilter").value;
+  const location = document.getElementById("locationFilter").value;
+  const category = document.getElementById("categoryFilter").value;
 
   let filtered = allCourses.filter((c) => {
     const d = new Date(c.start_date);
-    const matchesSearch = c.course_title.toLowerCase().includes(search);
-    const matchesMonth = month
-      ? d.toLocaleString("default", { month: "long" }) === month
-      : true;
-    const matchesYear = year ? d.getFullYear().toString() === year : true;
-    return matchesSearch && matchesMonth && matchesYear;
+    const courseMonth = `${d.toLocaleString("default", {
+      month: "long",
+    })} ${d.getFullYear()}`;
+
+    const matchesMonth = month ? courseMonth === month : true;
+    const matchesLocation = location ? c.location === location : true;
+    const matchesCategory = category ? c.category === category : true;
+
+    return matchesMonth && matchesLocation && matchesCategory;
   });
 
   currentPage = 1;
@@ -99,10 +114,9 @@ function groupByMonth(items) {
   items.forEach((s) => {
     const date = new Date(s.start_date);
     if (isNaN(date)) return;
-    const monthName = date.toLocaleString("default", {
+    const monthName = `${date.toLocaleString("default", {
       month: "long",
-      year: "numeric",
-    });
+    })} ${date.getFullYear()}`;
     if (!grouped[monthName]) grouped[monthName] = [];
     grouped[monthName].push(s);
   });
@@ -155,7 +169,7 @@ function renderCalendar(courseList = allCourses) {
               course.end_date
             )}</div>
             <div class="col">${course.location}</div>
-            <div class="col">${course.currency || "AED"} ${
+            <div class="col col-fees">${course.currency || "AED"} ${
         course.fees
       }</div>
         </div>
@@ -198,20 +212,20 @@ function openCourseModal(course) {
   } ${course.fees}`;
 
   const registerBtn = document.getElementById("modalRegister");
-  const captchaCheck = document.getElementById("captchaCheck");
+  const termsCheck = document.getElementById("termsCheck");
 
   document.getElementById("registrationForm").reset();
   registerBtn.classList.remove("enabled");
-  captchaCheck.checked = false;
+  termsCheck.checked = false;
 
-  captchaCheck.onchange = () => {
-    if (captchaCheck.checked) registerBtn.classList.add("enabled");
+  termsCheck.onchange = () => {
+    if (termsCheck.checked) registerBtn.classList.add("enabled");
     else registerBtn.classList.remove("enabled");
   };
 
   document.getElementById("registrationForm").onsubmit = async (e) => {
     e.preventDefault();
-    if (!captchaCheck.checked) return;
+    if (!termsCheck.checked) return;
 
     const payload = {
       course: course.course_title,
