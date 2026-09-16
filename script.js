@@ -1,200 +1,143 @@
-const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShZHjeKaVqGU0_iGOCzd3VHSstzPN4EX-nK_vDOswp1ryvkiW_o-DhxIofeXqMzD15jM_0ovhhRXeY/pub?output=csv";
-
-let currentPage = 1;
+const calendar = document.getElementById("calendar");
+const pagination = document.getElementById("pagination");
 const itemsPerPage = 10;
-let globalSessions = [];
+let currentPage = 1;
+let allCourses = [];
 
-async function loadCSV() {
-    const response = await fetch(sheetURL);
-    const data = await response.text();
-    return parseCSV(data);
+// Modal
+const modal = document.getElementById("courseModal");
+const closeModal = document.getElementById("closeModal");
+
+closeModal.onclick = () => modal.style.display = "none";
+window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
+
+// Fetch Google Sheet data
+async function loadCourses() {
+    const url = "YOUR_GOOGLE_SHEET_JSON_URL";
+    const res = await fetch(url);
+    const data = await res.json();
+    allCourses = data;
+    renderCalendar();
+    renderPagination();
 }
 
-function parseCSV(csv) {
-    const rows = csv.split("\n").map(r => r.split(","));
-    const headers = rows.shift();
-
-    return rows.map(row => {
-        let obj = {};
-        headers.forEach((h, i) => obj[h.trim()] = row[i]?.trim());
-        return obj;
-    });
-}
-
-function groupByMonth(sessions) {
-    const months = {};
-
-    sessions.forEach(s => {
+function groupByMonth(items) {
+    const grouped = {};
+    items.forEach(s => {
         const date = new Date(s.start_date);
         const monthName = date.toLocaleString("default", { month: "long", year: "numeric" });
-
-        if (!months[monthName]) months[monthName] = [];
-        months[monthName].push(s);
+        if (!grouped[monthName]) grouped[monthName] = [];
+        grouped[monthName].push(s);
     });
-
-    return months;
+    return grouped;
 }
 
-function populateFilters(sessions) {
-    const monthSelect = document.getElementById("filter-month");
-    const locationSelect = document.getElementById("filter-location");
-    const categorySelect = document.getElementById("filter-category");
-
-    const months = new Set();
-    const locations = new Set();
-    const categories = new Set();
-
-    sessions.forEach(s => {
-        months.add(new Date(s.start_date).toLocaleString("default", { month: "long", year: "numeric" }));
-        locations.add(s.location);
-        categories.add(s.category);
-    });
-
-    months.forEach(m => monthSelect.innerHTML += `<option value="${m}">${m}</option>`);
-    locations.forEach(l => locationSelect.innerHTML += `<option value="${l}">${l}</option>`);
-    categories.forEach(c => categorySelect.innerHTML += `<option value="${c}">${c}</option>`);
+function formatDate(start, end) {
+    const s = new Date(start);
+    const e = new Date(end);
+    return `${s.toLocaleDateString()} - ${e.toLocaleDateString()}`;
 }
 
-function formatDate(startStr, endStr) {
-    const start = new Date(startStr);
-    const end = new Date(endStr);
-
-    const startDay = start.getDate();
-    const endDay = end.getDate();
-
-    const startMonth = start.toLocaleString("default", { month: "short" });
-    const endMonth = end.toLocaleString("default", { month: "short" });
-
-    const startYear = start.getFullYear();
-    const endYear = end.getFullYear();
-
-    // If same month & same year → normal format
-    if (startMonth === endMonth && startYear === endYear) {
-        return `${startDay} - ${endDay} ${startMonth} ${startYear}`;
-    }
-
-    // If different month but same year
-    if (startYear === endYear) {
-        return `${startDay} ${startMonth} - ${endDay} ${endMonth} ${startYear}`;
-    }
-
-    // If different year
-    return `${startDay} ${startMonth} ${startYear} - ${endDay} ${endMonth} ${endYear}`;
-}
-
-function applySearchFilter(sessions) {
-    const searchValue = document.getElementById("search").value.toLowerCase();
-
-    if (!searchValue) return sessions;
-
-    return sessions.filter(s =>
-        s.course_title.toLowerCase().includes(searchValue) ||
-        s.location.toLowerCase().includes(searchValue) ||
-        s.category.toLowerCase().includes(searchValue)
-    );
-}
-
-function renderCalendar(sessions) {
-    const calendar = document.getElementById("calendar");
+function renderCalendar() {
     calendar.innerHTML = "";
 
-    const monthFilter = document.getElementById("filter-month").value;
-    const locationFilter = document.getElementById("filter-location").value;
-    const categoryFilter = document.getElementById("filter-category").value;
-
-    let filtered = sessions.filter(s => {
-        const monthName = new Date(s.start_date).toLocaleString("default", { month: "long", year: "numeric" });
-
-        return (!monthFilter || monthFilter === monthName) &&
-               (!locationFilter || locationFilter === s.location) &&
-               (!categoryFilter || categoryFilter === s.category);
-    });
-
-    filtered = applySearchFilter(filtered);
-
-    const totalItems = filtered.length;
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-
-    const paginatedItems = filtered.slice(startIndex, endIndex);
+    const paginatedItems = allCourses.slice(startIndex, startIndex + itemsPerPage);
 
     const grouped = groupByMonth(paginatedItems);
 
-    // Sort courses inside each month by start date
     Object.keys(grouped).forEach(month => {
-    grouped[month].sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
-});
-    
+        grouped[month].sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
+    });
+
     Object.keys(grouped).forEach(month => {
         calendar.innerHTML += `<div class="month-header">${month}</div>`;
 
         grouped[month].forEach(s => {
-            const link = s.course_link || "#";
-            const formattedDate = formatDate(s.start_date, s.end_date);
-
             calendar.innerHTML += `
-                <a href="${link}" target="_blank" style="text-decoration:none; color:inherit;">
-                    <div class="session">
-                        <div class="session-title">${s.course_title}</div>
-
-                        <div class="session-columns">
-                            <div class="col date-col">${formattedDate}</div>
-                            <div class="col location-col">${s.location}</div>
-                            <div class="col fees-col">${s.currency || "AED"} ${s.fees}</div>
-                        </div>
+                <div class="session" onclick='openCourseModal(${JSON.stringify(s)})'>
+                    <div class="session-title">${s.course_title}</div>
+                    <div class="session-columns">
+                        <div class="col">${formatDate(s.start_date, s.end_date)}</div>
+                        <div class="col">${s.location}</div>
+                        <div class="col">${s.currency || "AED"} ${s.fees}</div>
                     </div>
-                </a>
+                </div>
             `;
         });
     });
-
-    renderPagination(totalPages);
 }
 
-function renderPagination(totalPages) {
-    const calendar = document.getElementById("calendar");
-
-    let paginationHTML = `<div class="pagination">`;
+function renderPagination() {
+    const totalPages = Math.ceil(allCourses.length / itemsPerPage);
+    pagination.innerHTML = "";
 
     for (let i = 1; i <= totalPages; i++) {
-        paginationHTML += `
-            <div class="page-btn ${i === currentPage ? "active" : ""}" data-page="${i}">
-                ${i}
-            </div>
+        pagination.innerHTML += `
+            <span class="page-btn ${i === currentPage ? "active" : ""}" onclick="changePage(${i})">${i}</span>
         `;
     }
+}
 
-    paginationHTML += `</div>`;
+function changePage(page) {
+    currentPage = page;
+    renderCalendar();
+    renderPagination();
+}
 
-    calendar.innerHTML += paginationHTML;
+// Modal logic
+function openCourseModal(course) {
+    document.getElementById("modalTitle").innerText = course.course_title;
+    document.getElementById("modalTitleLink").href = course.course_link;
 
-    document.querySelectorAll(".page-btn").forEach(btn => {
-        btn.onclick = () => {
-            currentPage = parseInt(btn.dataset.page);
-            renderCalendar(globalSessions);
+    document.getElementById("modalDate").innerText = formatDate(course.start_date, course.end_date);
+    document.getElementById("modalLocation").innerText = course.location;
+    document.getElementById("modalFees").innerText = `${course.currency || "AED"} ${course.fees}`;
+
+    const registerBtn = document.getElementById("modalRegister");
+    const captchaCheck = document.getElementById("captchaCheck");
+
+    document.getElementById("registrationForm").reset();
+    registerBtn.classList.remove("enabled");
+    captchaCheck.checked = false;
+
+    captchaCheck.onchange = () => {
+        if (captchaCheck.checked) registerBtn.classList.add("enabled");
+        else registerBtn.classList.remove("enabled");
+    };
+
+    document.getElementById("registrationForm").onsubmit = async (e) => {
+        e.preventDefault();
+        if (!captchaCheck.checked) return;
+
+        const payload = {
+            course: course.course_title,
+            date: formatDate(course.start_date, course.end_date),
+            location: course.location,
+            fees: `${course.currency || "AED"} ${course.fees}`,
+            name: document.getElementById("regName").value,
+            email: document.getElementById("regEmail").value,
+            company: document.getElementById("regCompany").value,
+            position: document.getElementById("regPosition").value,
+            phone: document.getElementById("regPhone").value
         };
-    });
-}
 
-async function init() {
-    globalSessions = await loadCSV();
-    populateFilters(globalSessions);
-
-    document.querySelectorAll("#filters select").forEach(sel => {
-        sel.addEventListener("change", () => {
-            currentPage = 1;
-            renderCalendar(globalSessions);
+        const response = await fetch("https://script.google.com/macros/s/AKfycbxHw3aAV9V3o6LVt4QOdyHpkyaDwja_06miyPCNaPx9qHFrJ32m-I3JkCxZcVtHbge1kg/exec", {
+            method: "POST",
+            body: JSON.stringify(payload)
         });
-    });
 
-    document.getElementById("search").addEventListener("input", () => {
-        currentPage = 1;
-        renderCalendar(globalSessions);
-    });
+        const result = await response.json();
 
-    renderCalendar(globalSessions);
+        if (result.status === "success") {
+            alert("Your registration has been submitted successfully.");
+            modal.style.display = "none";
+        } else {
+            alert("There was an error submitting your registration.");
+        }
+    };
+
+    modal.style.display = "block";
 }
 
-init();
+loadCourses();
