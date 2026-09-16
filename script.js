@@ -219,24 +219,32 @@ function openCourseModal(course) {
   document.getElementById("registrationForm").onsubmit = async (e) => {
     e.preventDefault();
 
+    const regName = document.getElementById("regName");
+    const regEmail = document.getElementById("regEmail");
+    const regPhone = document.getElementById("regPhone");
+
+    if (!regName.value || !regEmail.value || !regPhone.value) {
+        alert("Please fill out all required fields.");
+        return;
+    }
+
     const payload = {
       course: course.course_title,
       date: formatDate(course.start_date, course.end_date),
       location: course.location,
       fees: `${course.currency || "AED"} ${course.fees}`,
-      name: document.getElementById("regName").value,
-      email: document.getElementById("regEmail").value,
+      name: regName.value,
+      email: regEmail.value,
       company: document.getElementById("regCompany").value,
       position: document.getElementById("regPosition").value,
-      phone: document.getElementById("regPhone").value,
+      country: document.getElementById("regCountry").value,
+      phone: regPhone.value,
     };
 
     const response = await fetch(apiURL, {
       method: "POST",
       body: JSON.stringify(payload),
     });
-
-    const result = await response.json();
 
     modal.style.display = "none";
     document.getElementById("successOverlay").style.display = "block";
