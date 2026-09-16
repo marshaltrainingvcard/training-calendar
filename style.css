@@ -119,7 +119,7 @@ body {
 }
 
 /* ========================= */
-/* MODAL — FINAL CLEAN FIX   */
+/* MODAL — FINAL FIX         */
 /* ========================= */
 
 .modal {
@@ -136,11 +136,12 @@ body {
 .modal-content {
     background: #fff;
     margin: 5% auto;
-    padding: 30px 40px;          /* equal spacing left/right */
+    padding: 30px 40px;          /* equal spacing */
     border-radius: 12px;
     width: 95%;
     max-width: 650px;            /* wider popup */
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    position: relative;          /* allows button alignment */
 }
 
 .close-btn {
@@ -164,23 +165,23 @@ body {
     font-size: 15px;
 }
 
-/* FORM — aligned with course details */
+/* FORM */
 .modal-form {
     width: 100%;
     margin-top: 10px;
 }
 
-/* LABELS — fix floating issue */
+/* LABELS — fix floating */
 .modal-form label {
-    display: block;              /* forces label to stay above input */
+    display: block;
     margin-top: 12px;
     font-weight: bold;
     font-size: 14px;
 }
 
-/* INPUTS — shorter, aligned left/right */
+/* INPUTS — equal spacing left/right */
 .modal-form input {
-    width: 90%;                  /* shorter than full width */
+    width: 100%;                 /* full width inside padded modal */
     padding: 10px;
     margin-top: 5px;
     border-radius: 6px;
@@ -213,10 +214,9 @@ body {
     text-decoration: underline;
 }
 
-/* REGISTER BUTTON — small + right aligned */
+/* REGISTER BUTTON — small + right aligned + NOT spilling */
 .register-btn {
-    width: 30%;                  /* one‑third width */
-    margin-top: 20px;
+    width: 30%;                  /* small button */
     padding: 10px;
     background: #f57c00;
     color: white;
@@ -224,7 +224,11 @@ body {
     border-radius: 6px;
     font-size: 15px;
     cursor: pointer;
-    float: right;                /* align right */
+
+    position: absolute;          /* FIXES SPILLING */
+    right: 40px;                 /* aligns with modal padding */
+    bottom: 30px;                /* stays inside modal */
+
     opacity: 0.5;
     pointer-events: none;
 }
