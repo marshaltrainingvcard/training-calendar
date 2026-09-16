@@ -6,7 +6,7 @@ const apiURL =
 
 const calendar = document.getElementById("calendar");
 const pagination = document.getElementById("pagination");
-const itemsPerPage = 20;
+const itemsPerPage = 15;
 let currentPage = 1;
 let allCourses = [];
 
