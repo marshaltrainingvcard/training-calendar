@@ -226,7 +226,7 @@ body {
 /* ========================= */
 
 .register-btn {
-    width: 28%;
+    width: 30%;
     padding: 10px;
     background: #f57c00;
     color: white;
@@ -235,9 +235,9 @@ body {
     font-size: 15px;
     cursor: pointer;
 
-    position: absolute;
-    right: 40px;
-    bottom: 40px;
+    display: block;
+    margin-left: auto;      /* pushes button to the right */
+    margin-top: 25px;       /* spacing from terms text */
 }
 
 /* ========================= */
