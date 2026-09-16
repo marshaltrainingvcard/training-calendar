@@ -134,7 +134,7 @@ body {
 }
 
 /* ========================= */
-/* MODAL (FINAL FIX)         */
+/* MODAL                     */
 /* ========================= */
 
 .modal {
@@ -203,26 +203,14 @@ body {
 }
 
 /* ========================= */
-/* TERMS CHECKBOX (FIXED)    */
+/* TERMS TEXT (NO CHECKBOX)  */
 /* ========================= */
 
 .terms-box {
     margin-top: 15px;
     width: 100%;
-    text-align: left !important;
-}
-
-.terms-box input[type="checkbox"] {
-    display: inline-block;
-    margin: 0 0 6px 0 !important;
-    position: relative;
-    left: 0 !important;
-}
-
-.terms-box label {
-    display: block;
+    text-align: left;
     font-size: 13px;
-    text-align: left !important;
 }
 
 .terms-box a {
@@ -234,7 +222,7 @@ body {
 }
 
 /* ========================= */
-/* REGISTER BUTTON (FIXED)   */
+/* REGISTER BUTTON           */
 /* ========================= */
 
 .register-btn {
@@ -250,12 +238,24 @@ body {
     position: absolute;
     right: 40px;
     bottom: 40px;
-
-    opacity: 0.5;
-    pointer-events: none;
 }
 
-.register-btn.enabled {
-    opacity: 1;
-    pointer-events: auto;
+/* ========================= */
+/* SUCCESS OVERLAY           */
+/* ========================= */
+
+#successOverlay {
+    display: none;
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 3000;
+    text-align: center;
+    padding-top: 20%;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
 }
