@@ -192,17 +192,20 @@ body {
 /* TERMS — checkbox above text, aligned left */
 .terms-box {
     margin-top: 15px;
-    display: block;              /* simple block container */
+    width: 100%;                 /* anchor to full form width */
+    padding-left: 0;             /* ensure left alignment */
 }
 
 .terms-box input[type="checkbox"] {
-    display: block;              /* own line */
-    margin: 0 0 4px 0;           /* small gap below, aligned left */
+    display: block;              /* forces checkbox to left edge */
+    margin: 0 0 6px 0;           /* small gap below */
+    transform: translateX(0);    /* prevents centering from parent */
 }
 
 .terms-box label {
-    display: inline-block;       /* text on its own line, left aligned */
+    display: block;              /* text on its own line */
     font-size: 13px;
+    text-align: left;            /* ensure left alignment */
 }
 
 .terms-box a {
