@@ -10,20 +10,21 @@
 
     <div class="container">
 
-        <h1>Training Calendar</h1>
-
         <div class="top-controls">
-            <input type="text" id="searchBar" placeholder="Search courses...">
             <select id="monthFilter">
                 <option value="">All Months</option>
             </select>
-            <select id="dateFilter">
-                <option value="">All Years</option>
+
+            <select id="locationFilter">
+                <option value="">All Locations</option>
+            </select>
+
+            <select id="categoryFilter">
+                <option value="">All Categories</option>
             </select>
         </div>
 
         <div id="calendar"></div>
-
         <div id="pagination"></div>
 
     </div>
@@ -65,10 +66,13 @@
                 <label>Telephone No*</label>
                 <input type="text" id="regPhone" required>
 
-                <div class="captcha-box">
-                    <label>
-                        <input type="checkbox" id="captchaCheck">
-                        I am not a robot
+                <div class="terms-box">
+                    <input type="checkbox" id="termsCheck">
+                    <label for="termsCheck">
+                        I accept the 
+                        <a href="https://www.marshaltraining.com/terms-conditions/" target="_blank">
+                            Terms & Conditions
+                        </a>
                     </label>
                 </div>
 
