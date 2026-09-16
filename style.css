@@ -1,125 +1,5 @@
-body {
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
-    margin: 0;
-    padding: 0;
-}
-
-.container {
-    width: 90%;
-    max-width: 1100px;
-    margin: 30px auto;
-}
-
-/* Filters + Search */
-.top-controls {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-#searchBar {
-    padding: 10px;
-    width: 220px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-.top-controls select {
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-/* Month header */
-.month-header {
-    background: #f57c00;
-    color: white;
-    padding: 12px 20px;
-    margin: 30px auto 10px auto;
-    width: 80%;
-    max-width: 700px;
-    border-radius: 10px;
-    font-size: 20px;
-    text-align: left;
-}
-
-/* Course box */
-.session {
-    background: white;
-    padding: 15px 20px;
-    margin: 15px auto;
-    width: 80%;
-    max-width: 700px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.session:hover {
-    transform: scale(1.02);
-}
-
-.session-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 12px;
-}
-
-/* Columns */
-.session-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    font-size: 15px;
-    align-items: center;
-}
-
-.session-columns .col {
-    padding: 5px 10px;
-}
-
-.col-date {
-    text-align: left;
-    font-weight: bold;
-}
-
-.session-columns .col:nth-child(2) {
-    text-align: center;
-}
-
-.col-fees {
-    text-align: right;
-    font-weight: bold;
-}
-
-.session-columns .col:not(:last-child) {
-    border-right: 1px solid #ddd;
-}
-
-/* Pagination */
-#pagination {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.page-btn {
-    padding: 8px 12px;
-    margin: 3px;
-    border: 1px solid #ccc;
-    cursor: pointer;
-    border-radius: 4px;
-    background: #fff;
-}
-
-.page-btn.active {
-    background: #f57c00;
-    color: white;
-}
-
 /* ========================= */
-/* MODAL — FULLY ISOLATED    */
+/* MODAL                     */
 /* ========================= */
 
 .modal {
@@ -139,7 +19,7 @@ body {
     padding: 25px 30px;
     border-radius: 12px;
     width: 90%;
-    max-width: 420px;
+    max-width: 480px; /* a bit wider */
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
@@ -157,11 +37,10 @@ body {
     font-size: 15px;
 }
 
-/* FORM */
+/* FORM – SAME WIDTH AS CONTENT */
 .modal-form {
     width: 100%;
-    max-width: 340px;
-    margin: 0 auto;
+    margin-top: 10px;
 }
 
 .modal-form label {
@@ -170,9 +49,9 @@ body {
     font-size: 14px;
 }
 
+/* INPUTS – FULL WIDTH INSIDE MODAL */
 .modal-form input {
     width: 100%;
-    max-width: 340px;
     padding: 9px;
     margin-top: 5px;
     border-radius: 6px;
@@ -180,13 +59,17 @@ body {
     font-size: 14px;
 }
 
-/* TERMS */
+/* TERMS – STACKED VERTICALLY */
 .terms-box {
     margin-top: 15px;
     display: flex;
-    align-items: center;
-    gap: 6px;
-    justify-content: flex-start;
+    flex-direction: column;   /* vertical stack */
+    align-items: flex-start;  /* align left */
+    gap: 4px;
+}
+
+.terms-box input[type="checkbox"] {
+    margin: 0;
 }
 
 .terms-box label {
@@ -202,10 +85,9 @@ body {
     text-decoration: underline;
 }
 
-/* REGISTER BUTTON */
+/* REGISTER BUTTON – FULL WIDTH */
 .register-btn {
     width: 100%;
-    max-width: 340px;
     margin-top: 20px;
     padding: 12px;
     background: #f57c00;
