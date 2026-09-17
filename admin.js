@@ -16,8 +16,8 @@ async function loadCourses() {
 
         row.innerHTML = `
             <td>${course.course_title}</td>
-            <td>${formatDate(course.start_date)}</td>
-            <td>${formatDate(course.end_date)}</td>
+            <td>${formatPrettyDate(course.start_date)}</td>
+            <td>${formatPrettyDate(course.end_date)}</td>
             <td>${course.location}</td>
             <td>${course.currency} ${course.fees}</td>
             <td>${course.category}</td>
@@ -64,12 +64,17 @@ document.getElementById("addCourseForm").onsubmit = async (e) => {
     loadCourses();
 };
 
-// Load courses on page start
-loadCourses();
-function formatDate(d) {
-    const date = new Date(d);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+function formatPrettyDate(d) {
+    // Ensure the date is treated as UTC to avoid timezone shifting
+    const date = new Date(d + "T00:00:00");
+
+    const day = String(date.getUTCDate()).padStart(2, "0");
+
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const month = months[date.getUTCMonth()];
+    const year = date.getUTCFullYear();
+
+    return `${day} ${month} ${year}`;
 }
