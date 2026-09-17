@@ -14,7 +14,7 @@
 
     <h3>Add New Course</h3>
 
-    <form id="addCourseForm">
+    <form id="addCourseForm" class="box">
 
         <label>Course Title*</label>
         <input type="text" id="course_title" required>
@@ -87,8 +87,9 @@
 </div>
 
 <!-- EDIT MODAL -->
-<div id="editModal" class="modal">
-    <div class="modal-content">
+<div id="editModal" class="modal" style="display:none;">
+    <div class="modal-content box">
+
         <h3>Edit Course</h3>
 
         <label>Course Title</label>
@@ -117,6 +118,7 @@
 
         <button onclick="saveEdit()" class="btn">Save Changes</button>
         <button onclick="closeEdit()" class="btn cancel">Cancel</button>
+
     </div>
 </div>
 
