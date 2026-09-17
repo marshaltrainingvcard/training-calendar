@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marshal Training Admin Panel</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Admin Panel — Course Management</h2>
+
+    <h3>Add New Course</h3>
+
+    <form id="addCourseForm">
+
+        <label>Course Title*</label>
+        <input type="text" id="course_title" required>
+
+        <label>Start Date*</label>
+        <input type="date" id="start_date" required>
+
+        <label>End Date*</label>
+        <input type="date" id="end_date" required>
+
+        <label>Location*</label>
+        <input type="text" id="location" required>
+
+        <label>Fees*</label>
+        <input type="number" id="fees" required>
+
+        <label>Currency*</label>
+        <input type="text" id="currency" value="AED" required>
+
+        <label>Category*</label>
+        <input type="text" id="category" required>
+
+        <label>Course Link (optional)</label>
+        <input type="text" id="course_link">
+
+        <button type="submit" class="btn">Add Course</button>
+    </form>
+
+    <div id="addSuccess" class="success">Course added successfully!</div>
+
+    <hr>
+
+    <h3>Existing Courses</h3>
+
+    <table id="courseTable">
+        <thead>
+            <tr>
+                <th>Course Title</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Location</th>
+                <th>Fees</th>
+                <th>Category</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+</div>
+
+<script src="admin.js"></script>
+
+</body>
+</html>
