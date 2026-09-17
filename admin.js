@@ -69,16 +69,25 @@ function renderPagination(total) {
 }
 
 // ===============================
-// FILTERS
+// FILTERS + SEARCH
 // ===============================
 function applyFilter() {
     const cat = document.getElementById("filterCategory").value;
     const loc = document.getElementById("filterLocation").value;
+    const search = document.getElementById("searchInput").value.toLowerCase();
 
     filteredCourses = currentCourses;
 
     if (cat) filteredCourses = filteredCourses.filter(c => c.category === cat);
     if (loc) filteredCourses = filteredCourses.filter(c => c.location === loc);
+
+    if (search.trim() !== "") {
+        filteredCourses = filteredCourses.filter(c =>
+            c.course_title.toLowerCase().includes(search) ||
+            c.location.toLowerCase().includes(search) ||
+            c.category.toLowerCase().includes(search)
+        );
+    }
 
     currentPage = 1;
     renderCourses(filteredCourses);
@@ -148,14 +157,6 @@ function toInputDate(d) {
     const parts = d.split("-");
     if (parts.length === 3) {
         return `${parts[0]}-${parts[1].padStart(2, "0")}-${parts[2].padStart(2, "0")}`;
-    }
-
-    const date = new Date(d);
-    if (!isNaN(date)) {
-        const year = date.getUTCFullYear();
-        const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-        const day = String(date.getUTCDate()).padStart(2, "0");
-        return `${year}-${month}-${day}`;
     }
 
     return "";
