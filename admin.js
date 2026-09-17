@@ -1,17 +1,32 @@
 const adminAPI =
   "https://script.google.com/macros/s/AKfycbxHw3aAV9V3o6LVt4QOdyHpkyaDwja_06miyPCNaPx9qHFrJ32m-I3JkCxZcVtHbge1kg/exec";
 
+let currentCourses = [];
+let filteredCourses = [];
+let currentPage = 1;
+const perPage = 15;
+
 // ===============================
 // LOAD EXISTING COURSES
 // ===============================
 async function loadCourses() {
     const res = await fetch(adminAPI + "?action=list");
-    const data = await res.json();
+    currentCourses = await res.json();
+    applyFilter(); // always filter first
+}
 
+// ===============================
+// RENDER COURSES (with pagination)
+// ===============================
+function renderCourses(list) {
     const tbody = document.querySelector("#courseTable tbody");
     tbody.innerHTML = "";
 
-    data.forEach((course, index) => {
+    const start = (currentPage - 1) * perPage;
+    const end = start + perPage;
+    const pageItems = list.slice(start, end);
+
+    pageItems.forEach((course, index) => {
         const row = document.createElement("tr");
 
         row.innerHTML = `
@@ -21,11 +36,52 @@ async function loadCourses() {
             <td>${course.location}</td>
             <td>${course.currency} ${course.fees}</td>
             <td>${course.category}</td>
-            <td><button class="delete-btn" onclick="deleteCourse(${index})">Delete</button></td>
+            <td>
+                <button class="edit-btn" onclick="editCourse(${index + start})">Edit</button>
+                <button class="delete-btn" onclick="deleteCourse(${index + start})">Delete</button>
+            </td>
         `;
 
         tbody.appendChild(row);
     });
+
+    renderPagination(list.length);
+}
+
+// ===============================
+// PAGINATION BUTTONS
+// ===============================
+function renderPagination(total) {
+    const pages = Math.ceil(total / perPage);
+    const container = document.getElementById("pagination");
+    container.innerHTML = "";
+
+    for (let i = 1; i <= pages; i++) {
+        const btn = document.createElement("button");
+        btn.innerText = i;
+        btn.className = (i === currentPage) ? "active-page" : "";
+        btn.onclick = () => {
+            currentPage = i;
+            renderCourses(filteredCourses);
+        };
+        container.appendChild(btn);
+    }
+}
+
+// ===============================
+// FILTERS
+// ===============================
+function applyFilter() {
+    const cat = document.getElementById("filterCategory").value;
+    const loc = document.getElementById("filterLocation").value;
+
+    filteredCourses = currentCourses;
+
+    if (cat) filteredCourses = filteredCourses.filter(c => c.category === cat);
+    if (loc) filteredCourses = filteredCourses.filter(c => c.location === loc);
+
+    currentPage = 1; // reset to first page
+    renderCourses(filteredCourses);
 }
 
 // ===============================
@@ -65,15 +121,59 @@ document.getElementById("addCourseForm").onsubmit = async (e) => {
 };
 
 // ===============================
-// DATE FORMATTER
+// EDIT COURSE
+// ===============================
+let editIndex = null;
+
+function editCourse(index) {
+    editIndex = index;
+    const course = currentCourses[index];
+
+    document.getElementById("edit_course_title").value = course.course_title;
+    document.getElementById("edit_start_date").value = course.start_date;
+    document.getElementById("edit_end_date").value = course.end_date;
+    document.getElementById("edit_location").value = course.location;
+    document.getElementById("edit_fees").value = course.fees;
+    document.getElementById("edit_currency").value = course.currency;
+    document.getElementById("edit_category").value = course.category;
+    document.getElementById("edit_course_link").value = course.course_link;
+
+    document.getElementById("editModal").style.display = "block";
+}
+
+function closeEdit() {
+    document.getElementById("editModal").style.display = "none";
+}
+
+async function saveEdit() {
+    const payload = {
+        row: editIndex,
+        course_title: document.getElementById("edit_course_title").value,
+        start_date: document.getElementById("edit_start_date").value,
+        end_date: document.getElementById("edit_end_date").value,
+        location: document.getElementById("edit_location").value,
+        fees: document.getElementById("edit_fees").value,
+        currency: document.getElementById("edit_currency").value,
+        category: document.getElementById("edit_category").value,
+        course_link: document.getElementById("edit_course_link").value
+    };
+
+    await fetch(adminAPI + "?action=edit", {
+        method: "POST",
+        body: JSON.stringify(payload)
+    });
+
+    closeEdit();
+    loadCourses();
+}
+
+// ===============================
+// DATE FORMATTER (final stable version)
 // ===============================
 function formatPrettyDate(d) {
     if (!d) return "";
-
-    // Convert to string and trim spaces
     d = String(d).trim();
 
-    // If Google Sheets returned an ISO timestamp (contains "T")
     if (d.includes("T")) {
         const iso = new Date(d);
         if (!isNaN(iso)) {
@@ -86,20 +186,16 @@ function formatPrettyDate(d) {
         }
     }
 
-    // If the date is in YYYY-MM-DD format
     const parts = d.split("-");
     if (parts.length === 3) {
         const year = parts[0];
         const month = parts[1];
         const day = parts[2];
-
         const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
         return `${day} ${months[Number(month) - 1]} ${year}`;
     }
 
-    // Fallback: try normal Date parsing
     const date = new Date(d);
     if (!isNaN(date)) {
         const day = String(date.getUTCDate()).padStart(2, "0");
@@ -110,7 +206,6 @@ function formatPrettyDate(d) {
         return `${day} ${month} ${year}`;
     }
 
-    // If everything fails, return raw value
     return d;
 }
 
