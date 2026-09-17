@@ -7,16 +7,32 @@ let currentPage = 1;
 const perPage = 15;
 
 // ===============================
-// LOAD EXISTING COURSES
+// LOAD EXISTING COURSES (with sorting)
 // ===============================
 async function loadCourses() {
     const res = await fetch(adminAPI + "?action=list");
     currentCourses = await res.json();
-    applyFilter();
+
+    // ⭐ GLOBAL SORT: start_date → end_date
+    currentCourses.sort((a, b) => {
+        const startA = new Date(a.start_date);
+        const startB = new Date(b.start_date);
+
+        if (startA.getTime() !== startB.getTime()) {
+            return startA - startB;
+        }
+
+        const endA = new Date(a.end_date);
+        const endB = new Date(b.end_date);
+
+        return endA - endB;
+    });
+
+    applyFilter(); // soft refresh
 }
 
 // ===============================
-// RENDER COURSES
+// RENDER COURSES (with pagination)
 // ===============================
 function renderCourses(list) {
     const tbody = document.querySelector("#courseTable tbody");
@@ -94,7 +110,7 @@ function applyFilter() {
 }
 
 // ===============================
-// DELETE COURSE (with confirmation)
+// DELETE COURSE (with confirmation + soft refresh)
 // ===============================
 function confirmDelete(index) {
     if (confirm("Are you sure you want to delete this course?")) {
@@ -104,11 +120,11 @@ function confirmDelete(index) {
 
 async function deleteCourse(index) {
     await fetch(adminAPI + "?action=delete&row=" + index);
-    loadCourses();
+    loadCourses(); // soft refresh
 }
 
 // ===============================
-// ADD COURSE
+// ADD COURSE (soft refresh)
 // ===============================
 document.getElementById("addCourseForm").onsubmit = async (e) => {
     e.preventDefault();
@@ -132,11 +148,11 @@ document.getElementById("addCourseForm").onsubmit = async (e) => {
     document.getElementById("addSuccess").style.display = "block";
     document.getElementById("addCourseForm").reset();
 
-    loadCourses();
+    loadCourses(); // soft refresh
 };
 
 // ===============================
-// EDIT COURSE
+// EDIT COURSE (soft refresh)
 // ===============================
 let editIndex = null;
 
@@ -203,7 +219,7 @@ async function saveEdit() {
     });
 
     closeEdit();
-    loadCourses();
+    loadCourses(); // soft refresh
 }
 
 // ===============================
