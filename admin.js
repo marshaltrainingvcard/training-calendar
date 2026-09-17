@@ -68,14 +68,31 @@ document.getElementById("addCourseForm").onsubmit = async (e) => {
 // DATE FORMATTER
 // ===============================
 function formatPrettyDate(d) {
-    // Ensure the date is treated as UTC to avoid timezone shifting
-    const date = new Date(d + "T00:00:00");
+    if (!d) return ""; // empty or null
+
+    // Clean the value (remove spaces, line breaks)
+    d = String(d).trim();
+
+    // If the date is already in YYYY-MM-DD format, parse manually
+    const parts = d.split("-");
+    if (parts.length === 3) {
+        const year = parts[0];
+        const month = parts[1];
+        const day = parts[2];
+
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        return `${day} ${months[Number(month) - 1]} ${year}`;
+    }
+
+    // Fallback for any other format
+    const date = new Date(d);
+    if (isNaN(date)) return d; // show raw value if still invalid
 
     const day = String(date.getUTCDate()).padStart(2, "0");
-
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
     const month = months[date.getUTCMonth()];
     const year = date.getUTCFullYear();
 
