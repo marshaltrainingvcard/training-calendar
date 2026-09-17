@@ -6,7 +6,7 @@ const apiURL =
 
 const calendar = document.getElementById("calendar");
 const pagination = document.getElementById("pagination");
-const itemsPerPage = 12;
+const itemsPerPage = 20; // UPDATED TO 20 ITEMS PER PAGE
 let currentPage = 1;
 let allCourses = [];
 
@@ -18,6 +18,19 @@ closeModal.onclick = () => (modal.style.display = "none");
 window.onclick = (e) => {
   if (e.target === modal) modal.style.display = "none";
 };
+
+// ===============================
+// HIDE COURSES AFTER END DATE
+// ===============================
+function isCourseExpired(course) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const endDate = new Date(course.end_date);
+  endDate.setHours(0, 0, 0, 0);
+
+  return endDate < today; // hide only AFTER end date
+}
 
 // Load CSV
 async function loadCourses() {
@@ -94,6 +107,8 @@ function applyFilters() {
   const category = document.getElementById("categoryFilter").value;
 
   let filtered = allCourses.filter((c) => {
+    if (isCourseExpired(c)) return false; // hide expired courses
+
     const d = new Date(c.start_date);
     const courseMonth = `${d.toLocaleString("default", {
       month: "long",
@@ -141,6 +156,8 @@ function formatDate(start, end) {
 }
 
 function renderCalendar(courseList = allCourses) {
+  courseList = courseList.filter((c) => !isCourseExpired(c)); // hide expired courses
+
   calendar.innerHTML = "";
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -185,6 +202,8 @@ function renderCalendar(courseList = allCourses) {
 }
 
 function renderPagination(courseList = allCourses) {
+  courseList = courseList.filter((c) => !isCourseExpired(c));
+
   const totalPages = Math.ceil(courseList.length / itemsPerPage);
   pagination.innerHTML = "";
 
@@ -224,8 +243,8 @@ function openCourseModal(course) {
     const regPhone = document.getElementById("regPhone");
 
     if (!regName.value || !regEmail.value || !regPhone.value) {
-        alert("Please fill out all required fields.");
-        return;
+      alert("Please fill out all required fields.");
+      return;
     }
 
     const payload = {
@@ -241,7 +260,7 @@ function openCourseModal(course) {
       phone: regPhone.value,
     };
 
-    const response = await fetch(apiURL, {
+    await fetch(apiURL, {
       method: "POST",
       body: JSON.stringify(payload),
     });
