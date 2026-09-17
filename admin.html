@@ -4,10 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marshal Training Admin Panel</title>
+
     <link rel="stylesheet" href="admin.css">
+
+    <!-- MD5 hashing library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
 
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="login-screen">
+    <div class="login-box">
+        <h2>Admin Login</h2>
+
+        <label>Username</label>
+        <input type="text" id="adminUser">
+
+        <label>Password</label>
+        <input type="password" id="adminPass">
+
+        <button class="btn" onclick="adminLogin()">Login</button>
+
+        <div id="loginError" class="error-msg">Invalid username or password</div>
+    </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" style="display:none;">
 <div class="container">
 
     <h2>Admin Panel — Course Management</h2>
@@ -49,27 +72,18 @@
 
     <h3>Existing Courses</h3>
 
-    <!-- FILTER BAR -->
     <div class="filter-bar">
-
         <input type="text" id="searchInput" placeholder="Search courses..." onkeyup="applyFilter()">
 
         <select id="filterCategory" onchange="applyFilter()">
             <option value="">All Categories</option>
-            <option value="Health & Safety">Health & Safety</option>
-            <option value="Technical">Technical</option>
         </select>
 
         <select id="filterLocation" onchange="applyFilter()">
             <option value="">All Locations</option>
-            <option value="Dubai">Dubai</option>
-            <option value="Abu Dhabi">Abu Dhabi</option>
-            <option value="Online">Online</option>
         </select>
-
     </div>
 
-    <!-- COURSE TABLE -->
     <table id="courseTable">
         <thead>
             <tr>
@@ -85,14 +99,13 @@
         <tbody></tbody>
     </table>
 
-    <!-- PAGINATION -->
     <div id="pagination"></div>
 
 </div>
 
 <!-- EDIT MODAL -->
-<div id="editModal" class="modal" style="display:none;">
-    <div class="modal-content box">
+<div id="editModal" class="modal">
+    <div class="modal-content">
 
         <h3>Edit Course</h3>
 
@@ -124,6 +137,8 @@
         <button onclick="closeEdit()" class="btn cancel">Cancel</button>
 
     </div>
+</div>
+
 </div>
 
 <script src="admin.js"></script>
