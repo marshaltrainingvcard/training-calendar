@@ -47,7 +47,6 @@ async function loadCourses() {
   const res = await fetch(adminAPI + "?action=list");
   currentCourses = await res.json();
 
-  // sort by start_date, then end_date
   currentCourses.sort((a, b) => {
     const startA = new Date(a.start_date);
     const startB = new Date(b.start_date);
@@ -245,7 +244,7 @@ async function saveEdit() {
   const course = currentCourses[editIndex];
 
   const payload = {
-    rowNumber: course.rowNumber, // use real sheet row
+    rowNumber: course.rowNumber,
     course_title: document.getElementById("edit_course_title").value,
     start_date: document.getElementById("edit_start_date").value,
     end_date: document.getElementById("edit_end_date").value,
