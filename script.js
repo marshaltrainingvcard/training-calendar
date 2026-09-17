@@ -6,7 +6,7 @@ const apiURL =
 
 const calendar = document.getElementById("calendar");
 const pagination = document.getElementById("pagination");
-const itemsPerPage = 10; // UPDATED TO 20 ITEMS PER PAGE
+const itemsPerPage = 10;
 let currentPage = 1;
 let allCourses = [];
 
@@ -29,10 +29,12 @@ function isCourseExpired(course) {
   const endDate = new Date(course.end_date);
   endDate.setHours(0, 0, 0, 0);
 
-  return endDate < today; // hide only AFTER end date
+  return endDate < today;
 }
 
-// Load CSV
+// ===============================
+// LOAD CSV + SORT COURSES
+// ===============================
 async function loadCourses() {
   const res = await fetch(sheetURL);
   const text = await res.text();
@@ -48,11 +50,30 @@ async function loadCourses() {
     return obj;
   });
 
+  // ⭐ GLOBAL SORT — start_date first, then end_date
+  allCourses.sort((a, b) => {
+    const startA = new Date(a.start_date);
+    const startB = new Date(b.start_date);
+
+    if (startA.getTime() !== startB.getTime()) {
+      return startA - startB;
+    }
+
+    // If same start date → sort by end date
+    const endA = new Date(a.end_date);
+    const endB = new Date(b.end_date);
+
+    return endA - endB;
+  });
+
   populateFilters();
   renderCalendar();
   renderPagination();
 }
 
+// ===============================
+// POPULATE FILTERS
+// ===============================
 function populateFilters() {
   const monthFilter = document.getElementById("monthFilter");
   const locationFilter = document.getElementById("locationFilter");
@@ -95,6 +116,9 @@ function populateFilters() {
   });
 }
 
+// ===============================
+// FILTERS
+// ===============================
 document.getElementById("searchBar").addEventListener("input", applyFilters);
 document.getElementById("monthFilter").addEventListener("change", applyFilters);
 document.getElementById("locationFilter").addEventListener("change", applyFilters);
@@ -107,7 +131,7 @@ function applyFilters() {
   const category = document.getElementById("categoryFilter").value;
 
   let filtered = allCourses.filter((c) => {
-    if (isCourseExpired(c)) return false; // hide expired courses
+    if (isCourseExpired(c)) return false;
 
     const d = new Date(c.start_date);
     const courseMonth = `${d.toLocaleString("default", {
@@ -127,6 +151,9 @@ function applyFilters() {
   renderPagination(filtered);
 }
 
+// ===============================
+// GROUP BY MONTH
+// ===============================
 function groupByMonth(items) {
   const grouped = {};
   items.forEach((s) => {
@@ -141,6 +168,9 @@ function groupByMonth(items) {
   return grouped;
 }
 
+// ===============================
+// FORMAT DATE
+// ===============================
 function formatDate(start, end) {
   const s = new Date(start);
   const e = new Date(end);
@@ -155,8 +185,11 @@ function formatDate(start, end) {
   return `${format(s)} - ${format(e)}`;
 }
 
+// ===============================
+// RENDER CALENDAR
+// ===============================
 function renderCalendar(courseList = allCourses) {
-  courseList = courseList.filter((c) => !isCourseExpired(c)); // hide expired courses
+  courseList = courseList.filter((c) => !isCourseExpired(c));
 
   calendar.innerHTML = "";
 
@@ -166,9 +199,19 @@ function renderCalendar(courseList = allCourses) {
   const grouped = groupByMonth(paginatedItems);
 
   Object.keys(grouped).forEach((month) => {
-    grouped[month].sort(
-      (a, b) => new Date(a.start_date) - new Date(b.start_date)
-    );
+    grouped[month].sort((a, b) => {
+      const startA = new Date(a.start_date);
+      const startB = new Date(b.start_date);
+
+      if (startA.getTime() !== startB.getTime()) {
+        return startA - startB;
+      }
+
+      const endA = new Date(a.end_date);
+      const endB = new Date(b.end_date);
+
+      return endA - endB;
+    });
   });
 
   Object.keys(grouped).forEach((month) => {
@@ -201,6 +244,9 @@ function renderCalendar(courseList = allCourses) {
   });
 }
 
+// ===============================
+// PAGINATION
+// ===============================
 function renderPagination(courseList = allCourses) {
   courseList = courseList.filter((c) => !isCourseExpired(c));
 
@@ -220,6 +266,9 @@ function renderPagination(courseList = allCourses) {
   }
 }
 
+// ===============================
+// MODAL
+// ===============================
 function openCourseModal(course) {
   document.getElementById("modalTitle").innerText = course.course_title;
   document.getElementById("modalTitleLink").href = course.course_link || "#";
