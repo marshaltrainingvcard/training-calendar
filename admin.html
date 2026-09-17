@@ -51,6 +51,9 @@
 
     <!-- FILTER BAR -->
     <div class="filter-bar">
+
+        <input type="text" id="searchInput" placeholder="Search courses..." onkeyup="applyFilter()">
+
         <select id="filterCategory" onchange="applyFilter()">
             <option value="">All Categories</option>
             <option value="Health & Safety">Health & Safety</option>
@@ -63,6 +66,7 @@
             <option value="Abu Dhabi">Abu Dhabi</option>
             <option value="Online">Online</option>
         </select>
+
     </div>
 
     <!-- COURSE TABLE -->
