@@ -64,6 +64,9 @@ document.getElementById("addCourseForm").onsubmit = async (e) => {
     loadCourses();
 };
 
+// ===============================
+// DATE FORMATTER
+// ===============================
 function formatPrettyDate(d) {
     // Ensure the date is treated as UTC to avoid timezone shifting
     const date = new Date(d + "T00:00:00");
@@ -78,3 +81,8 @@ function formatPrettyDate(d) {
 
     return `${day} ${month} ${year}`;
 }
+
+// ===============================
+// RUN AFTER PAGE LOADS
+// ===============================
+document.addEventListener("DOMContentLoaded", loadCourses);
