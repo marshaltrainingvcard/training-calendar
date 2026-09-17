@@ -68,12 +68,25 @@ document.getElementById("addCourseForm").onsubmit = async (e) => {
 // DATE FORMATTER
 // ===============================
 function formatPrettyDate(d) {
-    if (!d) return ""; // empty or null
+    if (!d) return "";
 
-    // Clean the value (remove spaces, line breaks)
+    // Convert to string and trim spaces
     d = String(d).trim();
 
-    // If the date is already in YYYY-MM-DD format, parse manually
+    // If Google Sheets returned an ISO timestamp (contains "T")
+    if (d.includes("T")) {
+        const iso = new Date(d);
+        if (!isNaN(iso)) {
+            const day = String(iso.getUTCDate()).padStart(2, "0");
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const month = months[iso.getUTCMonth()];
+            const year = iso.getUTCFullYear();
+            return `${day} ${month} ${year}`;
+        }
+    }
+
+    // If the date is in YYYY-MM-DD format
     const parts = d.split("-");
     if (parts.length === 3) {
         const year = parts[0];
@@ -86,17 +99,19 @@ function formatPrettyDate(d) {
         return `${day} ${months[Number(month) - 1]} ${year}`;
     }
 
-    // Fallback for any other format
+    // Fallback: try normal Date parsing
     const date = new Date(d);
-    if (isNaN(date)) return d; // show raw value if still invalid
+    if (!isNaN(date)) {
+        const day = String(date.getUTCDate()).padStart(2, "0");
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const month = months[date.getUTCMonth()];
+        const year = date.getUTCFullYear();
+        return `${day} ${month} ${year}`;
+    }
 
-    const day = String(date.getUTCDate()).padStart(2, "0");
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const month = months[date.getUTCMonth()];
-    const year = date.getUTCFullYear();
-
-    return `${day} ${month} ${year}`;
+    // If everything fails, return raw value
+    return d;
 }
 
 // ===============================
