@@ -12,11 +12,11 @@ const perPage = 15;
 async function loadCourses() {
     const res = await fetch(adminAPI + "?action=list");
     currentCourses = await res.json();
-    applyFilter(); // always filter first
+    applyFilter();
 }
 
 // ===============================
-// RENDER COURSES (with pagination)
+// RENDER COURSES
 // ===============================
 function renderCourses(list) {
     const tbody = document.querySelector("#courseTable tbody");
@@ -38,7 +38,7 @@ function renderCourses(list) {
             <td>${course.category}</td>
             <td>
                 <button class="edit-btn" onclick="editCourse(${index + start})">Edit</button>
-                <button class="delete-btn" onclick="deleteCourse(${index + start})">Delete</button>
+                <button class="delete-btn" onclick="confirmDelete(${index + start})">Delete</button>
             </td>
         `;
 
@@ -49,7 +49,7 @@ function renderCourses(list) {
 }
 
 // ===============================
-// PAGINATION BUTTONS
+// PAGINATION
 // ===============================
 function renderPagination(total) {
     const pages = Math.ceil(total / perPage);
@@ -80,13 +80,19 @@ function applyFilter() {
     if (cat) filteredCourses = filteredCourses.filter(c => c.category === cat);
     if (loc) filteredCourses = filteredCourses.filter(c => c.location === loc);
 
-    currentPage = 1; // reset to first page
+    currentPage = 1;
     renderCourses(filteredCourses);
 }
 
 // ===============================
-// DELETE COURSE
+// DELETE COURSE (with confirmation)
 // ===============================
+function confirmDelete(index) {
+    if (confirm("Are you sure you want to delete this course?")) {
+        deleteCourse(index);
+    }
+}
+
 async function deleteCourse(index) {
     await fetch(adminAPI + "?action=delete&row=" + index);
     loadCourses();
@@ -125,13 +131,43 @@ document.getElementById("addCourseForm").onsubmit = async (e) => {
 // ===============================
 let editIndex = null;
 
+function toInputDate(d) {
+    if (!d) return "";
+    d = String(d).trim();
+
+    if (d.includes("T")) {
+        const iso = new Date(d);
+        if (!isNaN(iso)) {
+            const year = iso.getUTCFullYear();
+            const month = String(iso.getUTCMonth() + 1).padStart(2, "0");
+            const day = String(iso.getUTCDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        }
+    }
+
+    const parts = d.split("-");
+    if (parts.length === 3) {
+        return `${parts[0]}-${parts[1].padStart(2, "0")}-${parts[2].padStart(2, "0")}`;
+    }
+
+    const date = new Date(d);
+    if (!isNaN(date)) {
+        const year = date.getUTCFullYear();
+        const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+        const day = String(date.getUTCDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    }
+
+    return "";
+}
+
 function editCourse(index) {
     editIndex = index;
     const course = currentCourses[index];
 
     document.getElementById("edit_course_title").value = course.course_title;
-    document.getElementById("edit_start_date").value = course.start_date;
-    document.getElementById("edit_end_date").value = course.end_date;
+    document.getElementById("edit_start_date").value = toInputDate(course.start_date);
+    document.getElementById("edit_end_date").value = toInputDate(course.end_date);
     document.getElementById("edit_location").value = course.location;
     document.getElementById("edit_fees").value = course.fees;
     document.getElementById("edit_currency").value = course.currency;
@@ -146,6 +182,8 @@ function closeEdit() {
 }
 
 async function saveEdit() {
+    if (!confirm("Are you sure you want to save these changes?")) return;
+
     const payload = {
         row: editIndex,
         course_title: document.getElementById("edit_course_title").value,
@@ -168,7 +206,7 @@ async function saveEdit() {
 }
 
 // ===============================
-// DATE FORMATTER (final stable version)
+// DATE FORMATTER
 // ===============================
 function formatPrettyDate(d) {
     if (!d) return "";
@@ -194,16 +232,6 @@ function formatPrettyDate(d) {
         const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         return `${day} ${months[Number(month) - 1]} ${year}`;
-    }
-
-    const date = new Date(d);
-    if (!isNaN(date)) {
-        const day = String(date.getUTCDate()).padStart(2, "0");
-        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        const month = months[date.getUTCMonth()];
-        const year = date.getUTCFullYear();
-        return `${day} ${month} ${year}`;
     }
 
     return d;
