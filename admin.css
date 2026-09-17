@@ -75,6 +75,12 @@ table th, table td {
     border-radius: 4px;
     cursor: pointer;
 }
+
+/* Remove width from .box (Option A fix) */
+.box {
+    /* width: 100%;  <-- REMOVED */
+}
+
 /* Modal overlay */
 .modal {
     position: fixed;
@@ -92,7 +98,7 @@ table th, table td {
 /* Modal box */
 .modal-content {
     background: #fff;
-    width: 450px;          /* SAME WIDTH AS YOUR ADD COURSE BOX */
+    width: 450px;          /* SAME WIDTH AS ADD COURSE BOX */
     padding: 25px;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
