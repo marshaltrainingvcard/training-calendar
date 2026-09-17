@@ -1,3 +1,7 @@
+document.addEventListener("DOMContentLoaded", () => {
+    loadCourses();
+});
+
 const adminAPI =
   "https://script.google.com/macros/s/AKfycbxHw3aAV9V3o6LVt4QOdyHpkyaDwja_06miyPCNaPx9qHFrJ32m-I3JkCxZcVtHbge1kg/exec";
 
@@ -5,39 +9,6 @@ let currentCourses = [];
 let filteredCourses = [];
 let currentPage = 1;
 const perPage = 15;
-
-/* ===============================
-   ADMIN LOGIN SYSTEM
-=============================== */
-
-const ADMIN_USERNAME = "marshaladmin";
-const ADMIN_PASSWORD_HASH = "9b74c9897bac770ffc029102a200c5de"; // MD5("admin123")
-
-function md5(str) {
-  return CryptoJS.MD5(str).toString();
-}
-
-function adminLogin() {
-  const user = document.getElementById("adminUser").value.trim();
-  const pass = document.getElementById("adminPass").value.trim();
-
-  if (user === ADMIN_USERNAME && md5(pass) === ADMIN_PASSWORD_HASH) {
-    localStorage.setItem("adminLoggedIn", "true");
-    document.getElementById("loginScreen").style.display = "none";
-    document.getElementById("adminPanel").style.display = "block";
-    loadCourses();
-  } else {
-    document.getElementById("loginError").style.display = "block";
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  if (localStorage.getItem("adminLoggedIn") === "true") {
-    document.getElementById("loginScreen").style.display = "none";
-    document.getElementById("adminPanel").style.display = "block";
-    loadCourses();
-  }
-});
 
 /* ===============================
    LOAD COURSES (SORTED)
