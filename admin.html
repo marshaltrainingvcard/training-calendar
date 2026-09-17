@@ -49,6 +49,23 @@
 
     <h3>Existing Courses</h3>
 
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+        <select id="filterCategory" onchange="applyFilter()">
+            <option value="">All Categories</option>
+            <option value="Health & Safety">Health & Safety</option>
+            <option value="Technical">Technical</option>
+        </select>
+
+        <select id="filterLocation" onchange="applyFilter()">
+            <option value="">All Locations</option>
+            <option value="Dubai">Dubai</option>
+            <option value="Abu Dhabi">Abu Dhabi</option>
+            <option value="Online">Online</option>
+        </select>
+    </div>
+
+    <!-- COURSE TABLE -->
     <table id="courseTable">
         <thead>
             <tr>
@@ -58,12 +75,49 @@
                 <th>Location</th>
                 <th>Fees</th>
                 <th>Category</th>
-                <th>Delete</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody></tbody>
     </table>
 
+    <!-- PAGINATION -->
+    <div id="pagination"></div>
+
+</div>
+
+<!-- EDIT MODAL -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <h3>Edit Course</h3>
+
+        <label>Course Title</label>
+        <input id="edit_course_title">
+
+        <label>Start Date</label>
+        <input id="edit_start_date" type="date">
+
+        <label>End Date</label>
+        <input id="edit_end_date" type="date">
+
+        <label>Location</label>
+        <input id="edit_location">
+
+        <label>Fees</label>
+        <input id="edit_fees">
+
+        <label>Currency</label>
+        <input id="edit_currency">
+
+        <label>Category</label>
+        <input id="edit_category">
+
+        <label>Course Link</label>
+        <input id="edit_course_link">
+
+        <button onclick="saveEdit()" class="btn">Save Changes</button>
+        <button onclick="closeEdit()" class="btn cancel">Cancel</button>
+    </div>
 </div>
 
 <script src="admin.js"></script>
