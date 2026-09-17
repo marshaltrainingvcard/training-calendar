@@ -89,16 +89,18 @@ table th, table td {
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.4);
-    display: none;
-    justify-content: center;
-    align-items: center;
+
+    display: flex;               /* FIX */
+    justify-content: center;     /* FIX */
+    align-items: center;         /* FIX */
+
     z-index: 9999;
 }
 
 /* Modal box */
 .modal-content {
     background: #fff;
-    width: 450px;          /* SAME WIDTH AS ADD COURSE BOX */
+    width: 450px;
     padding: 25px;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
