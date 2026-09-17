@@ -16,8 +16,8 @@ async function loadCourses() {
 
         row.innerHTML = `
             <td>${course.course_title}</td>
-            <td>${course.start_date}</td>
-            <td>${course.end_date}</td>
+            <td>${formatDate(course.start_date)}</td>
+            <td>${formatDate(course.end_date)}</td>
             <td>${course.location}</td>
             <td>${course.currency} ${course.fees}</td>
             <td>${course.category}</td>
