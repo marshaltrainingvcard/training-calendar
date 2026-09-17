@@ -6,14 +6,47 @@ let filteredCourses = [];
 let currentPage = 1;
 const perPage = 15;
 
-// ===============================
-// LOAD EXISTING COURSES (with sorting)
-// ===============================
+/* ===============================
+   ADMIN LOGIN SYSTEM
+=============================== */
+
+const ADMIN_USERNAME = "marshaladmin";
+const ADMIN_PASSWORD_HASH = "9b74c9897bac770ffc029102a200c5de"; // hash of "admin123"
+
+function md5(str) {
+    return CryptoJS.MD5(str).toString();
+}
+
+function adminLogin() {
+    const user = document.getElementById("adminUser").value.trim();
+    const pass = document.getElementById("adminPass").value.trim();
+
+    if (user === ADMIN_USERNAME && md5(pass) === ADMIN_PASSWORD_HASH) {
+        localStorage.setItem("adminLoggedIn", "true");
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("adminPanel").style.display = "block";
+        loadCourses();
+    } else {
+        document.getElementById("loginError").style.display = "block";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    if (localStorage.getItem("adminLoggedIn") === "true") {
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("adminPanel").style.display = "block";
+        loadCourses();
+    }
+});
+
+/* ===============================
+   LOAD COURSES (SORTED)
+=============================== */
+
 async function loadCourses() {
     const res = await fetch(adminAPI + "?action=list");
     currentCourses = await res.json();
 
-    // ⭐ GLOBAL SORT: start_date → end_date
     currentCourses.sort((a, b) => {
         const startA = new Date(a.start_date);
         const startB = new Date(b.start_date);
@@ -28,12 +61,13 @@ async function loadCourses() {
         return endA - endB;
     });
 
-    applyFilter(); // soft refresh
+    applyFilter();
 }
 
-// ===============================
-// RENDER COURSES (with pagination)
-// ===============================
+/* ===============================
+   RENDER COURSES
+=============================== */
+
 function renderCourses(list) {
     const tbody = document.querySelector("#courseTable tbody");
     tbody.innerHTML = "";
@@ -64,9 +98,10 @@ function renderCourses(list) {
     renderPagination(list.length);
 }
 
-// ===============================
-// PAGINATION
-// ===============================
+/* ===============================
+   PAGINATION
+=============================== */
+
 function renderPagination(total) {
     const pages = Math.ceil(total / perPage);
     const container = document.getElementById("pagination");
@@ -84,9 +119,10 @@ function renderPagination(total) {
     }
 }
 
-// ===============================
-// FILTERS + SEARCH
-// ===============================
+/* ===============================
+   FILTERS
+=============================== */
+
 function applyFilter() {
     const cat = document.getElementById("filterCategory").value;
     const loc = document.getElementById("filterLocation").value;
@@ -109,23 +145,25 @@ function applyFilter() {
     renderCourses(filteredCourses);
 }
 
-// ===============================
-// DELETE COURSE (with confirmation + soft refresh)
-// ===============================
+/* ===============================
+   DELETE COURSE (correct row)
+=============================== */
+
 function confirmDelete(index) {
     if (confirm("Are you sure you want to delete this course?")) {
-        deleteCourse(index);
+        deleteCourse(currentCourses[index].rowNumber);
     }
 }
 
-async function deleteCourse(index) {
-    await fetch(adminAPI + "?action=delete&row=" + index);
-    loadCourses(); // soft refresh
+async function deleteCourse(rowNumber) {
+    await fetch(adminAPI + "?action=delete&row=" + rowNumber);
+    loadCourses();
 }
 
-// ===============================
-// ADD COURSE (soft refresh)
-// ===============================
+/* ===============================
+   ADD COURSE
+=============================== */
+
 document.getElementById("addCourseForm").onsubmit = async (e) => {
     e.preventDefault();
 
@@ -148,12 +186,13 @@ document.getElementById("addCourseForm").onsubmit = async (e) => {
     document.getElementById("addSuccess").style.display = "block";
     document.getElementById("addCourseForm").reset();
 
-    loadCourses(); // soft refresh
+    loadCourses();
 };
 
-// ===============================
-// EDIT COURSE (soft refresh)
-// ===============================
+/* ===============================
+   EDIT COURSE
+=============================== */
+
 let editIndex = null;
 
 function toInputDate(d) {
@@ -186,75 +225,4 @@ function editCourse(index) {
     document.getElementById("edit_start_date").value = toInputDate(course.start_date);
     document.getElementById("edit_end_date").value = toInputDate(course.end_date);
     document.getElementById("edit_location").value = course.location;
-    document.getElementById("edit_fees").value = course.fees;
-    document.getElementById("edit_currency").value = course.currency;
-    document.getElementById("edit_category").value = course.category;
-    document.getElementById("edit_course_link").value = course.course_link;
-
-    document.getElementById("editModal").style.display = "block";
-}
-
-function closeEdit() {
-    document.getElementById("editModal").style.display = "none";
-}
-
-async function saveEdit() {
-    if (!confirm("Are you sure you want to save these changes?")) return;
-
-    const payload = {
-        row: editIndex,
-        course_title: document.getElementById("edit_course_title").value,
-        start_date: document.getElementById("edit_start_date").value,
-        end_date: document.getElementById("edit_end_date").value,
-        location: document.getElementById("edit_location").value,
-        fees: document.getElementById("edit_fees").value,
-        currency: document.getElementById("edit_currency").value,
-        category: document.getElementById("edit_category").value,
-        course_link: document.getElementById("edit_course_link").value
-    };
-
-    await fetch(adminAPI + "?action=edit", {
-        method: "POST",
-        body: JSON.stringify(payload)
-    });
-
-    closeEdit();
-    loadCourses(); // soft refresh
-}
-
-// ===============================
-// DATE FORMATTER
-// ===============================
-function formatPrettyDate(d) {
-    if (!d) return "";
-    d = String(d).trim();
-
-    if (d.includes("T")) {
-        const iso = new Date(d);
-        if (!isNaN(iso)) {
-            const day = String(iso.getUTCDate()).padStart(2, "0");
-            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            const month = months[iso.getUTCMonth()];
-            const year = iso.getUTCFullYear();
-            return `${day} ${month} ${year}`;
-        }
-    }
-
-    const parts = d.split("-");
-    if (parts.length === 3) {
-        const year = parts[0];
-        const month = parts[1];
-        const day = parts[2];
-        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        return `${day} ${months[Number(month) - 1]} ${year}`;
-    }
-
-    return d;
-}
-
-// ===============================
-// RUN AFTER PAGE LOADS
-// ===============================
-document.addEventListener("DOMContentLoaded", loadCourses);
+    document.getElementById("edit_fees").value =
