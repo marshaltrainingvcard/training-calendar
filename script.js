@@ -309,7 +309,7 @@ function openCourseModal(course) {
       phone: regPhone.value,
     };
 
-    await fetch(apiURL, {
+    await fetch(apiURL + "?action=register", {
       method: "POST",
       body: JSON.stringify(payload),
     });
