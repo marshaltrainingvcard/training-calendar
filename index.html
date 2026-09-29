@@ -52,12 +52,11 @@
             <hr>
 
             <!-- PROFESSIONAL STATICFORMS REGISTRATION FORM -->
-            <form action="https://api.staticforms.dev/submit" method="POST" class="registration-form">
+            <form id="marshalForm" action="https://api.staticforms.dev/submit" method="POST" class="registration-form">
 
-                <!-- StaticForms API Key -->
                 <input type="hidden" name="apiKey" value="sf_576cac9853df30e63f036a37">
+                <input type="hidden" name="redirectTo" value="">
 
-                <!-- Hidden course details -->
                 <input type="hidden" name="course" id="formCourse">
                 <input type="hidden" name="date" id="formDate">
                 <input type="hidden" name="location" id="formLocation">
@@ -110,7 +109,9 @@
 
     <!-- Success Overlay -->
     <div id="successOverlay">
-        Your registration has been submitted successfully. We will send a confirmation shortly.
+        Registration submitted successfully.
+        <br><br>
+        Click anywhere to close.
     </div>
 
     <script src="script.js"></script>
