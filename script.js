@@ -1,9 +1,6 @@
 const sheetURL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vShZHjeKaVqGU0_iGOCzd3VHSstzPN4EX-nK_vDOswp1ryvkiW_o-DhxIofeXqMzD15jM_0ovhhRXeY/pub?output=csv";
 
-const apiURL =
-  "https://script.google.com/macros/s/AKfycbxvYeBliyBZTiu6W4EGE9pFAUROED5DGf1sFc3WHpsNd1oKBVEDFiLXXk7o1WFfKFXp/exec";
-
 const calendar = document.getElementById("calendar");
 const pagination = document.getElementById("pagination");
 const itemsPerPage = 10;
@@ -50,7 +47,7 @@ async function loadCourses() {
     return obj;
   });
 
-  // ⭐ GLOBAL SORT — start_date first, then end_date
+  // Sort by start_date then end_date
   allCourses.sort((a, b) => {
     const startA = new Date(a.start_date);
     const startB = new Date(b.start_date);
@@ -59,7 +56,6 @@ async function loadCourses() {
       return startA - startB;
     }
 
-    // If same start date → sort by end date
     const endA = new Date(a.end_date);
     const endB = new Date(b.end_date);
 
@@ -267,7 +263,7 @@ function renderPagination(courseList = allCourses) {
 }
 
 // ===============================
-// MODAL
+// MODAL + WORDPRESS FORM INTEGRATION
 // ===============================
 function openCourseModal(course) {
   document.getElementById("modalTitle").innerText = course.course_title;
@@ -282,46 +278,9 @@ function openCourseModal(course) {
     course.currency || "AED"
   } ${course.fees}`;
 
-  document.getElementById("registrationForm").reset();
-
-  document.getElementById("registrationForm").onsubmit = async (e) => {
-    e.preventDefault();
-
-    const regName = document.getElementById("regName");
-    const regEmail = document.getElementById("regEmail");
-    const regPhone = document.getElementById("regPhone");
-
-    if (!regName.value || !regEmail.value || !regPhone.value) {
-      alert("Please fill out all required fields.");
-      return;
-    }
-
-    const payload = {
-      course: course.course_title,
-      date: formatDate(course.start_date, course.end_date),
-      location: course.location,
-      fees: `${course.currency || "AED"} ${course.fees}`,
-      name: regName.value,
-      email: regEmail.value,
-      company: document.getElementById("regCompany").value,
-      position: document.getElementById("regPosition").value,
-      country: document.getElementById("regCountry").value,
-      phone: regPhone.value,
-    };
-
-    await fetch(apiURL + "?action=register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    modal.style.display = "none";
-    document.getElementById("successOverlay").style.display = "block";
-
-    setTimeout(() => {
-      document.getElementById("successOverlay").style.display = "none";
-    }, 2000);
-  };
+  // Load WordPress form with course details
+  document.getElementById("registrationFormFrame").src =
+    `https://www.marshaltraining.com/registration-form/?title=${encodeURIComponent(course.course_title)}&date=${encodeURIComponent(formatDate(course.start_date, course.end_date))}&location=${encodeURIComponent(course.location)}&fees=${encodeURIComponent((course.currency || "AED") + " " + course.fees)}`;
 
   modal.style.display = "block";
 }
