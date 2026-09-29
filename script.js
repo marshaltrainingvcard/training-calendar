@@ -301,10 +301,10 @@ document.getElementById("marshalForm").addEventListener("submit", function(e) {
         method: "POST",
         body: data
     }).then(() => {
-        // Show overlay
-        document.getElementById("successOverlay").style.display = "block";
+        document.getElementById("successOverlay").innerHTML =
+            "Registration submitted successfully.<br><br>Our team will contact you shortly to confirm your registration.<br><br>Click anywhere to close.";
 
-        // Hide modal behind it
+        document.getElementById("successOverlay").style.display = "block";
         document.getElementById("courseModal").style.display = "none";
     });
 });
