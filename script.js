@@ -2,7 +2,7 @@ const sheetURL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vShZHjeKaVqGU0_iGOCzd3VHSstzPN4EX-nK_vDOswp1ryvkiW_o-DhxIofeXqMzD15jM_0ovhhRXeY/pub?output=csv";
 
 const apiURL =
-  "https://script.google.com/macros/s/AKfycbw1EaEZ7C5tvLn8BaRn899ltdxEfJUOUVFqcgKzJrUn_IOBQQX8EIOuvVxL231Xsnw/exec";
+  "https://script.google.com/macros/s/AKfycbxvYeBliyBZTiu6W4EGE9pFAUROED5DGf1sFc3WHpsNd1oKBVEDFiLXXk7o1WFfKFXp/exec";
 
 const calendar = document.getElementById("calendar");
 const pagination = document.getElementById("pagination");
