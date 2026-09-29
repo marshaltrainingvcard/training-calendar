@@ -15,12 +15,13 @@ body {
 }
 
 /* ============================
-   TOP CONTROLS
+   TOP CONTROLS CENTERED
 ============================ */
 .top-controls {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
 }
 
 .top-controls input,
@@ -46,10 +47,12 @@ body {
     border-radius: 6px;
     cursor: pointer;
     border: 1px solid #ddd;
+    transition: all 0.2s ease;
 }
 
 .session:hover {
-    background: #eef4ff;
+    background: #ffe8cc;
+    transform: scale(1.02);
 }
 
 .session-title {
@@ -64,19 +67,45 @@ body {
     font-size: 14px;
 }
 
+.session-columns .col:nth-child(2) {
+    text-align: center;
+}
+
+/* Add separators */
+.session-columns .col {
+    position: relative;
+}
+
+.session-columns .col:not(:last-child)::after {
+    content: "|";
+    position: absolute;
+    right: -12px;
+    color: #999;
+}
+
 /* ============================
-   PAGINATION
+   PAGINATION CENTERED + ORANGE
 ============================ */
+#pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
 .page-btn {
     padding: 8px 12px;
     margin: 5px;
     cursor: pointer;
     background: #ddd;
     border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.page-btn:hover {
+    background: #ffb366;
 }
 
 .page-btn.active {
-    background: #007bff;
+    background: #ff8c00;
     color: #fff;
 }
 
@@ -128,7 +157,7 @@ body {
     margin-top: 25px;
     margin-bottom: 10px;
     font-size: 18px;
-    border-bottom: 2px solid #007bff;
+    border-bottom: 2px solid #ff8c00;
     padding-bottom: 5px;
 }
 
@@ -166,7 +195,7 @@ body {
     margin-top: 20px;
     width: 100%;
     padding: 14px;
-    background: #007bff;
+    background: #ff8c00;
     color: #fff;
     border: none;
     font-size: 16px;
@@ -175,7 +204,7 @@ body {
 }
 
 .registration-form .submit-btn:hover {
-    background: #005fcc;
+    background: #e67a00;
 }
 
 /* ============================
@@ -194,4 +223,5 @@ body {
     font-size: 22px;
     text-align: center;
     padding-top: 200px;
+    cursor: pointer;
 }
