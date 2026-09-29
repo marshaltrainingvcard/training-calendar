@@ -51,27 +51,80 @@
 
             <hr>
 
-            <!-- StaticForms Registration Form -->
-            <form action="https://api.staticforms.dev/submit" method="POST">
+            <!-- FULL PROFESSIONAL STATICFORMS REGISTRATION FORM -->
+            <form action="https://api.staticforms.dev/submit" method="POST" class="registration-form">
 
-                <!-- Your StaticForms API key -->
+                <!-- StaticForms API Key -->
                 <input type="hidden" name="apiKey" value="sf_576cac9853df30e63f036a37">
 
-                <!-- Hidden fields for course details -->
+                <!-- Hidden course details -->
                 <input type="hidden" name="course" id="formCourse">
                 <input type="hidden" name="date" id="formDate">
                 <input type="hidden" name="location" id="formLocation">
                 <input type="hidden" name="fees" id="formFees">
 
+                <h3>Course Registration</h3>
+                <p>Please fill in your details below.</p>
+
+                <h4>Personal Information</h4>
+
+                <label>Full Name
+                    <input type="text" name="full_name" required>
+                </label>
+
                 <label>Email
                     <input type="email" name="email" required>
                 </label>
 
-                <label>Message
-                    <textarea name="message" required></textarea>
+                <label>Company Name
+                    <input type="text" name="company">
                 </label>
 
-                <button type="submit">Send</button>
+                <label>Designation / Position
+                    <input type="text" name="position">
+                </label>
+
+                <label>Country
+                    <input type="text" name="country">
+                </label>
+
+                <label>Telephone Number
+                    <input type="text" name="phone">
+                </label>
+
+                <h4>Billing / Administrator Information</h4>
+
+                <label>Billing Name
+                    <input type="text" name="billing_name">
+                </label>
+
+                <label>Billing Email
+                    <input type="email" name="billing_email">
+                </label>
+
+                <label>Billing Company
+                    <input type="text" name="billing_company">
+                </label>
+
+                <label>Billing Address
+                    <textarea name="billing_address"></textarea>
+                </label>
+
+                <label>Billing Country
+                    <input type="text" name="billing_country">
+                </label>
+
+                <label>Billing Telephone
+                    <input type="text" name="billing_phone">
+                </label>
+
+                <label class="terms">
+                    <input type="checkbox" name="terms" required>
+                    I agree to the Terms & Conditions and Cancellation Policy.
+                </label>
+
+                <button type="submit" class="submit-btn">Submit Registration</button>
+
             </form>
 
         </div>
