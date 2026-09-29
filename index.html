@@ -51,12 +51,28 @@
 
             <hr>
 
-            <!-- WordPress Registration Form (via iframe) -->
-            <iframe 
-                id="registrationFormFrame"
-                src=""
-                style="width:100%; height:700px; border:none;">
-            </iframe>
+            <!-- StaticForms Registration Form -->
+            <form action="https://api.staticforms.dev/submit" method="POST">
+
+                <!-- Your StaticForms API key -->
+                <input type="hidden" name="apiKey" value="sf_576cac9853df30e63f036a37">
+
+                <!-- Hidden fields for course details -->
+                <input type="hidden" name="course" id="formCourse">
+                <input type="hidden" name="date" id="formDate">
+                <input type="hidden" name="location" id="formLocation">
+                <input type="hidden" name="fees" id="formFees">
+
+                <label>Email
+                    <input type="email" name="email" required>
+                </label>
+
+                <label>Message
+                    <textarea name="message" required></textarea>
+                </label>
+
+                <button type="submit">Send</button>
+            </form>
 
         </div>
     </div>
