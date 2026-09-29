@@ -289,3 +289,20 @@ function openCourseModal(course) {
 }
 
 loadCourses();
+document.getElementById("marshalForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const data = new FormData(form);
+
+    fetch(form.action, {
+        method: "POST",
+        body: data
+    }).then(() => {
+        document.getElementById("successOverlay").style.display = "block";
+    });
+});
+
+document.getElementById("successOverlay").onclick = function() {
+    this.style.display = "none";
+};
