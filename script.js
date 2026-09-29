@@ -263,9 +263,11 @@ function renderPagination(courseList = allCourses) {
 }
 
 // ===============================
-// MODAL + WORDPRESS FORM INTEGRATION
+// MODAL + STATICFORMS INTEGRATION
 // ===============================
 function openCourseModal(course) {
+
+  // Fill modal text
   document.getElementById("modalTitle").innerText = course.course_title;
   document.getElementById("modalTitleLink").href = course.course_link || "#";
 
@@ -274,14 +276,15 @@ function openCourseModal(course) {
     course.end_date
   );
   document.getElementById("modalLocation").innerText = course.location;
-  document.getElementById("modalFees").innerText = `${
-    course.currency || "AED"
-  } ${course.fees}`;
+  document.getElementById("modalFees").innerText = `${course.currency || "AED"} ${course.fees}`;
 
-  // Load WordPress form with course details
-  document.getElementById("registrationFormFrame").src =
-    `https://www.marshaltraining.com/registration-form/?title=${encodeURIComponent(course.course_title)}&date=${encodeURIComponent(formatDate(course.start_date, course.end_date))}&location=${encodeURIComponent(course.location)}&fees=${encodeURIComponent((course.currency || "AED") + " " + course.fees)}`;
+  // Fill StaticForms hidden fields
+  document.getElementById("formCourse").value = course.course_title;
+  document.getElementById("formDate").value = formatDate(course.start_date, course.end_date);
+  document.getElementById("formLocation").value = course.location;
+  document.getElementById("formFees").value = `${course.currency || "AED"} ${course.fees}`;
 
+  // Show modal
   modal.style.display = "block";
 }
 
