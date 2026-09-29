@@ -31,7 +31,7 @@ body {
 }
 
 /* ============================
-   MONTH HEADER (MATCH YOUR IMAGE)
+   MONTH HEADER
 ============================ */
 .month-header {
     background: #ff8c00;
@@ -46,13 +46,13 @@ body {
 }
 
 /* ============================
-   COURSE SESSION BOX (PERFECT SIZE)
+   COURSE SESSION BOX
 ============================ */
 .session {
     background: #fff;
     padding: 20px;
     margin: 15px auto;
-    width: 500px;              /* <<< PERFECT SIZE */
+    width: 500px;
     border-radius: 12px;
     cursor: pointer;
     border: 1px solid #ddd;
@@ -73,7 +73,7 @@ body {
 }
 
 /* ============================
-   COURSE DETAILS WITH CENTERED SEPARATORS
+   COURSE DETAILS
 ============================ */
 .session-columns {
     display: flex;
@@ -88,7 +88,6 @@ body {
     position: relative;
 }
 
-/* Centered separators */
 .session-columns .col:not(:last-child)::after {
     content: "|";
     position: absolute;
@@ -99,7 +98,7 @@ body {
 }
 
 /* ============================
-   PAGINATION CENTERED + ORANGE
+   PAGINATION
 ============================ */
 #pagination {
     text-align: center;
@@ -157,7 +156,7 @@ body {
 }
 
 /* ============================
-   FORM STYLING
+   FORM
 ============================ */
 .registration-form {
     margin-top: 20px;
@@ -176,7 +175,6 @@ body {
     padding-bottom: 5px;
 }
 
-/* TWO-COLUMN GRID */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -239,4 +237,62 @@ body {
     text-align: center;
     padding-top: 200px;
     cursor: pointer;
+}
+
+/* ============================
+   MOBILE RESPONSIVE FIXES
+============================ */
+@media (max-width: 600px) {
+
+    /* Make everything fit on screen */
+    .month-header {
+        width: 95%;
+        font-size: 18px;
+        padding: 10px;
+    }
+
+    .session {
+        width: 95%;
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .session-title {
+        font-size: 16px;
+    }
+
+    /* Details wrap instead of overflowing */
+    .session-columns {
+        flex-direction: column;
+        gap: 6px;
+        font-size: 13px;
+    }
+
+    /* Remove separators on mobile */
+    .session-columns .col:not(:last-child)::after {
+        display: none;
+    }
+
+    /* Filters stack vertically */
+    .top-controls {
+        flex-direction: column;
+        width: 95%;
+        margin: 0 auto 20px auto;
+    }
+
+    .top-controls input,
+    .top-controls select {
+        width: 100%;
+    }
+
+    /* Form becomes single column */
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin-top: 30px;
+        padding: 20px;
+    }
 }
