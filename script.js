@@ -227,7 +227,7 @@ function renderCalendar(courseList = allCourses) {
               course.start_date,
               course.end_date
             )}</div>
-            <div class="col">${course.location}</div>
+            <div class="col col-location">${course.location}</div>
             <div class="col col-fees">${course.currency || "AED"} ${
         course.fees
       }</div>
@@ -288,7 +288,9 @@ function openCourseModal(course) {
   modal.style.display = "block";
 }
 
-loadCourses();
+// ===============================
+// STATICFORMS SUBMISSION WITHOUT REDIRECT
+// ===============================
 document.getElementById("marshalForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
@@ -299,10 +301,17 @@ document.getElementById("marshalForm").addEventListener("submit", function(e) {
         method: "POST",
         body: data
     }).then(() => {
+        // Show overlay
         document.getElementById("successOverlay").style.display = "block";
+
+        // Hide modal behind it
+        document.getElementById("courseModal").style.display = "none";
     });
 });
 
+// Clicking anywhere closes overlay
 document.getElementById("successOverlay").onclick = function() {
     this.style.display = "none";
 };
+
+loadCourses();
