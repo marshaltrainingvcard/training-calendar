@@ -31,15 +31,23 @@ body {
 }
 
 /* ============================
-   CALENDAR LIST
+   MONTH HEADER (MATCH YOUR IMAGE)
 ============================ */
 .month-header {
+    background: #ff8c00;
+    color: #fff;
+    padding: 12px 20px;
+    margin: 30px auto 10px auto;
+    width: 80%;
+    max-width: 700px;
+    border-radius: 10px;
     font-size: 20px;
-    font-weight: bold;
-    margin-top: 30px;
-    margin-bottom: 10px;
+    text-align: left;
 }
 
+/* ============================
+   COURSE SESSION BOX
+============================ */
 .session {
     background: #fff;
     padding: 15px;
@@ -61,25 +69,29 @@ body {
     margin-bottom: 8px;
 }
 
+/* ============================
+   COURSE DETAILS WITH CENTERED SEPARATORS
+============================ */
 .session-columns {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     font-size: 14px;
 }
 
-.session-columns .col:nth-child(2) {
-    text-align: center;
-}
-
-/* Add separators */
 .session-columns .col {
+    flex: 1;
+    text-align: center;
     position: relative;
 }
 
+/* Add centered separators */
 .session-columns .col:not(:last-child)::after {
     content: "|";
     position: absolute;
-    right: -12px;
+    right: -15px;
+    top: 50%;
+    transform: translateY(-50%);
     color: #999;
 }
 
@@ -208,7 +220,7 @@ body {
 }
 
 /* ============================
-   SUCCESS OVERLAY
+   SUCCESS OVERLAY (UPDATED MESSAGE)
 ============================ */
 #successOverlay {
     display: none;
