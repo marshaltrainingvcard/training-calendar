@@ -38,7 +38,7 @@ body {
     color: #fff;
     padding: 12px 20px;
     margin: 40px auto 15px auto;
-    width: 350px;
+    width: 500px;
     border-radius: 10px;
     font-size: 20px;
     text-align: center;
@@ -46,14 +46,14 @@ body {
 }
 
 /* ============================
-   COURSE SESSION BOX (REDUCED WIDTH)
+   COURSE SESSION BOX (PERFECT SIZE)
 ============================ */
 .session {
     background: #fff;
-    padding: 18px;
-    margin: 12px auto;
-    width: 350px;              /* <<< SMALLER, CLEANER BOX */
-    border-radius: 10px;
+    padding: 20px;
+    margin: 15px auto;
+    width: 500px;              /* <<< PERFECT SIZE */
+    border-radius: 12px;
     cursor: pointer;
     border: 1px solid #ddd;
     transition: all 0.2s ease;
@@ -66,9 +66,9 @@ body {
 }
 
 .session-title {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     text-align: center;
 }
 
@@ -79,7 +79,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 18px;
+    gap: 25px;
     font-size: 14px;
     text-align: center;
 }
@@ -92,7 +92,7 @@ body {
 .session-columns .col:not(:last-child)::after {
     content: "|";
     position: absolute;
-    right: -12px;
+    right: -15px;
     top: 50%;
     transform: translateY(-50%);
     color: #999;
